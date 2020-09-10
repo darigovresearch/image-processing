@@ -166,7 +166,7 @@ class Tiling:
         :return:
         """
         trans_coords = []
-        transform = osr.CoordinateTransformation( src_srs, tgt_srs)
+        transform = osr.CoordinateTransformation(src_srs, tgt_srs)
 
         for x, y in coords:
             x, y, z = transform.TransformPoint(x, y)
@@ -216,7 +216,7 @@ class Tiling:
                     except RuntimeError as error:
                         logging.info(">>>>>> Partially outside the image. {} Not saved!".format(error))
 
-    def tiling_vector(self, image_tiles_folder, shp_reference, output_folder):
+    def tiling_vector(self, image_tiles_folder, shp_reference, output_folder, reproject):
         """
         :param image_tiles_folder:
         :param shp_reference:
@@ -250,36 +250,43 @@ class Tiling:
             complete_path = os.path.join(image_tiles_folder, image)
             tile = gdal.Open(complete_path)
 
+            # srs = osr.SpatialReference()
+            # srs.ImportFromWkt(tile.GetProjection())
+
             gt = tile.GetGeoTransform()
             cols_tile = tile.RasterXSize
             rows_tile = tile.RasterYSize
             ext = self.get_extent(gt, cols_tile, rows_tile)
 
-            srs_tile = osr.SpatialReference()
-            srs_tile.ImportFromWkt(tile.GetProjection())
-            tgt_srs = srs_tile.CloneGeogCS()
-            ext = self.reproject_coords(ext, srs_tile, tgt_srs)
-
             bounds = Polygon(ext)
             baseshp = gp.read_file(shp_reference)
-            crs = baseshp.crs
+            # TODO: definir crs a partir do crs da imagem/tile
+            baseshp = baseshp.to_crs('epsg:32722')
 
             ids = []
             classes = []
             polygons_intersecting = []
             for i in range(len(baseshp)):
-                if not baseshp['geometry'][i].intersection(bounds).is_empty:
+                p1 = baseshp['geometry'][i]
+                p2 = bounds
+
+                if p1.is_valid is False:
+                    logging.info(">>>> Geometry {} was corrected with topological issues!".format(i))
+                    p1 = p1.buffer(0)
+
+                if not p1.intersection(p2).is_empty:
                     ids.append(i)
                     classes.append(baseshp[settings.CLASS_NAME][i])
-                    polygons_intersecting.append(baseshp['geometry'][i].intersection(bounds))
+                    polygons_intersecting.append(p1.intersection(p2))
 
             if len(polygons_intersecting) != 0:
                 gdf = gp.GeoDataFrame()
-                gdf.crs = crs
+                gdf.crs = baseshp.crs
                 gdf['id'] = ids
                 gdf['class'] = classes
                 gdf['geometry'] = polygons_intersecting
                 output = os.path.join(output_folder, filename + ".shp")
                 gdf.to_file(output, driver='ESRI Shapefile')
             else:
+                os.remove(complete_path)
                 logging.info(">>>> Image {} does not intersect with {}".format(image, shp_reference))
