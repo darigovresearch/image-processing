@@ -8,8 +8,8 @@ VALID_VECTOR_EXTENSION = ".shp"
 
 CLASS_NAME = 'class'
 CLASSES = {
-    "nut": [133, 224, 133],
-    "palm": [194, 194, 163]
+    "nut": [102, 153, 0],
+    "palm": [153, 255, 153]
 }
 
 

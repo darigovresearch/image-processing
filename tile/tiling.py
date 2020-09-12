@@ -76,7 +76,7 @@ class Tiling:
 
         return new_arrays
 
-    def shp2png(self, shapefile_folder, output_folder, width, height, classes):
+    def shp2png(self, raster_folder, shapefile_folder, output_folder, width, height, classes):
         """
         Source: https://github.com/GeospatialPython/geospatialpython/blob/master/shp2img.py
         Example of classes variable:
@@ -86,6 +86,7 @@ class Tiling:
                 "cloud": [255, 255, 255],
                 "shadow": [128, 128, 128]
             }
+        :param raster_folder:
         :param shapefile_folder:
         :param output_folder:
         :param width:
@@ -100,13 +101,28 @@ class Tiling:
             name, file_extension = os.path.splitext(shape)
             shape_path = os.path.join(shapefile_folder, shape)
             output = os.path.join(output_folder, name + ".png")
+            raster = os.path.join(raster_folder, name + ".TIF")
 
-            r = shapefile.Reader(shape_path)
-            if not r:
+            if os.path.isfile(raster):
+                tile = gdal.Open(raster)
+                gt = tile.GetGeoTransform()
+                cols_tile = tile.RasterXSize
+                rows_tile = tile.RasterYSize
+                ext = self.get_extent(gt, cols_tile, rows_tile)
+            else:
+                continue
+
+            if os.path.isfile(shape_path):
+                r = shapefile.Reader(shape_path, encoding='ISO8859-1')
+                if not r:
+                    logging.info('>>>> Error: could not open the shapefile')
+                    continue
+            else:
                 logging.info('>>>> Error: could not open the shapefile')
+                continue
 
-            x_dist = r.bbox[2] - r.bbox[0]
-            y_dist = r.bbox[3] - r.bbox[1]
+            x_dist = ext[3][0] - ext[1][0]
+            y_dist = ext[3][1] - ext[1][1]
             x_ratio = width / x_dist
             y_ratio = height / y_dist
 
@@ -121,8 +137,8 @@ class Tiling:
                     parts = shapes[i].parts
                     pixels = []
                     for x, y in shapes[i].points:
-                        px = int(width - ((r.bbox[2] - x) * x_ratio))
-                        py = int((r.bbox[3] - y) * y_ratio)
+                        px = int(width - ((ext[3][0] - x) * x_ratio))
+                        py = int((ext[3][1] - y) * y_ratio)
                         pixels.append((px, py))
 
                     if len(parts) > 1:
@@ -136,7 +152,6 @@ class Tiling:
                             classes[record[1]][1]) + ", " + str(classes[record[1]][2]) + ")")
 
             img.save(output)
-            logging.info(">> Raster (png) respect to vector {} save successfully!".format(shape_path))
 
     def get_extent(self, gt, cols, rows):
         """
@@ -157,21 +172,6 @@ class Tiling:
                 ext.append([x, y])
             y_arr.reverse()
         return ext
-
-    def reproject_coords(self, coords, src_srs, tgt_srs):
-        """
-        :param coords:
-        :param src_srs:
-        :param tgt_srs:
-        :return:
-        """
-        trans_coords = []
-        transform = osr.CoordinateTransformation(src_srs, tgt_srs)
-
-        for x, y in coords:
-            x, y, z = transform.TransformPoint(x, y)
-            trans_coords.append([x, y])
-        return trans_coords
 
     def tiling_raster(self, image_folder, output_folder, width, height):
         """
@@ -211,12 +211,12 @@ class Tiling:
                         output = os.path.join(output_folder, name + "_" + str(i) + "_" + str(j) + file_extension)
                         gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
                                        outputType=gdal.GDT_UInt16, scaleParams=[[list(zip(*[vmin, vmax]))]],
-                                       options=['-epo'])
+                                       options=['-epo', '-eco', '-b', '5', '-b', '3', '-b', '2'])
 
                     except RuntimeError as error:
                         logging.info(">>>>>> Partially outside the image. {} Not saved!".format(error))
 
-    def tiling_vector(self, image_tiles_folder, shp_reference, output_folder, reproject):
+    def tiling_vector(self, image_tiles_folder, shp_reference, output_folder):
         """
         :param image_tiles_folder:
         :param shp_reference:
@@ -271,7 +271,6 @@ class Tiling:
                 p2 = bounds
 
                 if p1.is_valid is False:
-                    logging.info(">>>> Geometry {} was corrected with topological issues!".format(i))
                     p1 = p1.buffer(0)
 
                 if not p1.intersection(p2).is_empty:
@@ -289,4 +288,4 @@ class Tiling:
                 gdf.to_file(output, driver='ESRI Shapefile')
             else:
                 os.remove(complete_path)
-                logging.info(">>>> Image {} does not intersect with {}".format(image, shp_reference))
+                logging.info(">>>> Image {} does not intersect with {}. Removed!".format(image, shp_reference))

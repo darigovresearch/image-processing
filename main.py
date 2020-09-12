@@ -20,27 +20,27 @@ def main(arguments):
                 tiling.Tiling().tiling_raster(arguments.image_folder, arguments.output_folder,
                                               arguments.width, arguments.height)
             else:
-                logging.error(">> One of arguments (image_folder, output_folder, weigth, height) are incorrect or "
+                logging.error(">> One of arguments (image_folder, output_folder, weight, height) are incorrect or "
                               "empty. Try it again!")
                 raise RuntimeError
         elif arguments.procedure == 'tiling_vector':
             if (arguments.image_tiles is not None) and (arguments.shapefile_reference is not None) and \
                     (arguments.output_folder is not None):
                 tiling.Tiling().tiling_vector(arguments.image_tiles, arguments.shapefile_reference,
-                                              arguments.output_folder, True)
+                                              arguments.output_folder)
             else:
                 logging.error(">> One of arguments (image_tiles, shapefile_reference, output_folder) are incorrect or "
                               "empty. Try it again!")
                 raise RuntimeError
-        # elif arguments.procedure == 'shp2png':
-        #     if (arguments.shapefile_folder is not None) and (arguments.output_folder is not None) and \
-        #             (arguments.width is not None) and (arguments.height is not None):
-        #         tiling.Tiling().shp2png(arguments.shapefile_folder, arguments.output_folder,
-        #                                 arguments.width, arguments.height, settings.CLASSES)
-        #     else:
-        #         logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
-        #                       "empty. Try it again!")
-        #         raise RuntimeError
+        elif arguments.procedure == 'shp2png':
+            if (arguments.shapefile_folder is not None) and (arguments.output_folder is not None) and \
+                    (arguments.width is not None) and (arguments.height is not None):
+                tiling.Tiling().shp2png(arguments.image_folder, arguments.shapefile_folder, arguments.output_folder,
+                                        arguments.width, arguments.height, settings.CLASSES)
+            else:
+                logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
+                              "empty. Try it again!")
+                raise RuntimeError
         else:
             logging.error(">> Procedure option not found. Try it again!")
             raise RuntimeError
