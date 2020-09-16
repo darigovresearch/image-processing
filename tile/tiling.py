@@ -5,11 +5,13 @@ import logging
 import shapefile
 import numpy as np
 import geopandas as gp
-import osgeo.osr as osr
+import glob
 import settings
 
 from shapely.geometry import Polygon
 from PIL import Image, ImageDraw
+
+logging.getLogger('shapely.geos').setLevel(logging.CRITICAL)
 
 
 class Tiling:
@@ -61,7 +63,7 @@ class Tiling:
         cv2.imwrite(output, cv2.cvtColor(im, cv2.COLOR_RGB2BGR))
         logging.info("Annotated image with unified classes saved as {}".format(output))
 
-    # TODO: refatorar
+    # TODO: refactor
     def slice_array(self, array, positions):
         """
         :param array:
@@ -113,6 +115,7 @@ class Tiling:
                 continue
 
             if os.path.isfile(shape_path):
+                # TODO: try to predict the encoding - hard-coded
                 r = shapefile.Reader(shape_path, encoding='ISO8859-1')
                 if not r:
                     logging.info('>>>> Error: could not open the shapefile')
@@ -150,7 +153,6 @@ class Tiling:
                     else:
                         draw.polygon(pixels, outline=None, fill="rgb(" + str(classes[record[1]][0]) + ", " + str(
                             classes[record[1]][1]) + ", " + str(classes[record[1]][2]) + ")")
-
             img.save(output)
 
     def get_extent(self, gt, cols, rows):
@@ -173,26 +175,21 @@ class Tiling:
             y_arr.reverse()
         return ext
 
-    def tiling_raster(self, image_folder, output_folder, width, height):
+    def tiling_raster(self, image, output_folder, width, height):
         """
-        :param image_folder:
+        :param image:
         :param output_folder:
         :param width:
         :param height:
         :return:
         """
-        files = os.listdir(image_folder)
-        image_list = [file for file in files if file.endswith(settings.VALID_RASTER_EXTENSION)]
-
-        for image in image_list:
-            name, file_extension = os.path.splitext(image)
-            image_path = os.path.join(image_folder, image)
-
-            ds = gdal.Open(image_path)
+        if os.path.isfile(image) and image.endswith(settings.VALID_RASTER_EXTENSION):
+            filename = os.path.basename(image)
+            name, file_extension = os.path.splitext(filename)
+            ds = gdal.Open(image)
 
             if ds is None:
                 logging.warning(">>>>>> Could not open image file {}. Skipped!".format(image))
-                continue
 
             stats = [ds.GetRasterBand(i + 1).GetStatistics(True, True) for i in range(ds.RasterCount)]
             vmin, vmax, vmean, vstd = zip(*stats)
@@ -213,8 +210,8 @@ class Tiling:
                                        outputType=gdal.GDT_UInt16, scaleParams=[[list(zip(*[vmin, vmax]))]],
                                        options=['-epo', '-eco', '-b', '5', '-b', '3', '-b', '2'])
 
-                    except RuntimeError as error:
-                        logging.info(">>>>>> Partially outside the image. {} Not saved!".format(error))
+                    except RuntimeError:
+                        continue
 
     def tiling_vector(self, image_tiles_folder, shp_reference, output_folder):
         """
@@ -224,11 +221,11 @@ class Tiling:
         :return:
         """
         if not os.path.isdir(image_tiles_folder):
-            logging.warning(">>>> {} not a folder of tiles!".format(image_tiles_folder))
+            logging.warning(">>>> {} is not a folder!".format(image_tiles_folder))
             return
 
         if not os.path.isfile(shp_reference):
-            logging.warning(">>>> {} not a shapefile!".format(shp_reference))
+            logging.warning(">>>> {} is not a file!".format(shp_reference))
             return
 
         filename = os.path.basename(shp_reference)
@@ -238,20 +235,19 @@ class Tiling:
             logging.warning(">>>> {} not a valid extension for a vector!".format(file_extension))
             return
 
-        logging.info(">> Tiling vector {} respecting to the tiles extends in {}".format(shp_reference,
-                                                                                        image_tiles_folder))
-        for image in os.listdir(image_tiles_folder):
-            filename, ext2 = os.path.splitext(image)
+        logging.info(">> Tiling vector {} respecting to the tiles extends".format(shp_reference))
 
-            if ext2.lower() not in settings.VALID_RASTER_EXTENSION:
-                logging.warning(">>>> {} not a valid extension for a raster!".format(ext2))
+        list_correspondent_raster = glob.glob(os.path.join(image_tiles_folder, name + '*'))
+        for image in list_correspondent_raster:
+            filename = os.path.basename(image)
+            name, ext = os.path.splitext(filename)
+
+            if ext.lower() not in settings.VALID_RASTER_EXTENSION:
+                logging.warning(">>>> {} not a valid extension for a raster!".format(ext))
                 continue
 
             complete_path = os.path.join(image_tiles_folder, image)
             tile = gdal.Open(complete_path)
-
-            # srs = osr.SpatialReference()
-            # srs.ImportFromWkt(tile.GetProjection())
 
             gt = tile.GetGeoTransform()
             cols_tile = tile.RasterXSize
@@ -260,7 +256,10 @@ class Tiling:
 
             bounds = Polygon(ext)
             baseshp = gp.read_file(shp_reference)
-            # TODO: definir crs a partir do crs da imagem/tile
+
+            # TODO: define shapefile crs from image crs
+            # srs = osr.SpatialReference()
+            # srs.ImportFromWkt(tile.GetProjection())
             baseshp = baseshp.to_crs('epsg:32722')
 
             ids = []
@@ -284,8 +283,9 @@ class Tiling:
                 gdf['id'] = ids
                 gdf['class'] = classes
                 gdf['geometry'] = polygons_intersecting
-                output = os.path.join(output_folder, filename + ".shp")
+
+                output = os.path.join(output_folder, name + ".shp")
                 gdf.to_file(output, driver='ESRI Shapefile')
             else:
                 os.remove(complete_path)
-                logging.info(">>>> Image {} does not intersect with {}. Removed!".format(image, shp_reference))
+

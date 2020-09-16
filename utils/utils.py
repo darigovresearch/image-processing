@@ -11,6 +11,14 @@ class Utils:
     def __init__(self):
         pass
 
+    def get_only_certain_extension(self, path, extension):
+        file_list = []
+        x = os.listdir(path)
+        for i in x:
+            if i.endswith(extension):
+                file_list.append(i)
+        return file_list
+
     def check_file(self, dir, prefix):
         for s in os.listdir(dir):
             if os.path.splitext(s)[0] == prefix and os.path.isfile(os.path.join(dir, s)):
