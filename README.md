@@ -84,7 +84,7 @@ python main.py -procedure tiling_vector
 ```
 **In Linux, it should be run in main folder**
 
-## Running the SHP to PNG convertion:
+## Running the SHP to PNG conversion:
 The vector tiling consists in crop the full shapefile in small peaces according to the raster tiles extends processed before. The procedure saves a tiled shapefile if the full shapefile intersect a raster tile. If it does not intersect, the raster tile is then deleted (in order to save space). 
 
 Here, the procedure demands 6 arguments, which are the procedure to be executed (`-procedure`), the shapefile tiles path (`-shapefile_folder`), the output to the final annotation images (`-output`), the width dimension of the tiles (`-tile_width`), the height dimension of the tiles (`-tile_height`), and a boolean verbose outcomes (`-verbose`). 
@@ -98,7 +98,28 @@ python main.py -procedure shp2png
 ```
 **In Linux, it should be run in main folder**
 
-## Bash for sequencial processing `run.sh`
+## Keras/Pillow format file required:
+Some image formats do not work well over the [Keras framework](https://keras.io/), such as, TIFF format. For that reason, the tiles generated in `tiling_vector` can then be converted in PNG format using `gdal_translate` ([More details](https://gdal.org/programs/gdal_translate.html)), finally get the final version of the Deep Learning input. The shellscript `tiff2png` is an auxiliary file to translate all tiff repository in png format:
+```
+for entry in $1*
+do
+  if [ -f "$entry" ];then
+    dir=$(dirname "$entry")"/"
+    filename=$(basename -- "$entry")
+    extension="${filename##*.}"
+    name="${filename%.*}"
+    gdal_translate -of PNG -ot UInt16 $dir$filename $dir$name".PNG"
+    rm $entry
+    rm $dir$name".PNG.aux.xml"
+  fi
+done
+```
+just under `scripts/` folder, run:
+```
+./tiff2png PATH_TO_TIFF_FOLDER
+```
+
+## Bash for sequential processing `run.sh`
 Compiling the three procedures in one, the shellscript `run.sh`, in `/scripts` can be then apply for multiple images and shapefiles, generating a consistent amount of samples. So, this file simply summary all processing until the final pair of training samples, which is the pair of image and its correspondent reference (annotation image). So, the only thing needed are the full images (preference in `.tiff` format), and its full correspondent shapefiles (ESRI Shapefile format - `.shp` extension).
 ```
 RASTER_PATH=$1
@@ -122,6 +143,5 @@ python main.py -procedure shp2png -image "$RASTER_TILE_OUTPUT" -shapefile_folder
 ```
 
 # TODO-list
-
 This source-code is being released for specific applications, and for those who probably has similar needs. For this reason, we still have a lot to do in terms of unit tests, python conventions, optimization issues, refactoring, so on! So, Feel free to use and any recommendation or PRs will be totally welcome!
 
