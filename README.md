@@ -1,5 +1,18 @@
 <img src="pics/bioverse.png">
 
+<p align="center">    
+    <a href="https://github.com/Bioverse-Labs/image-processing/stargazers" alt="Stars">
+        <img src="https://img.shields.io/github/issues/Bioverse-Labs/image-processing" /></a>
+    <a href="https://github.com/Bioverse-Labs/image-processing/stargazers" alt="Stars">
+        <img src="https://img.shields.io/github/stars/Bioverse-Labs/image-processing" /></a>
+    <a href="https://github.com/Bioverse-Labs/image-processing/forks" alt="Forks">
+        <img src="https://img.shields.io/github/forks/Bioverse-Labs/image-processing" /></a>
+    <a href="https://github.com/Bioverse-Labs/image-processing/LICENCE.md" alt="Licence">
+        <img src="https://img.shields.io/github/license/Bioverse-Labs/image-processing" /></a>
+    <a href="https://twitter.com/BioverseLabs" alt="Twitter">
+        <img src="https://img.shields.io/twitter/follow/BioverseLabs?label=Follow&style=social" /></a>
+</p>
+
 # Bioverse Labs (image-processing module)
 The image-processing module incorporate essential procedures to prepare remote sensing images mostly for automatic classification methods, in this case specifically, deep-learning approaches. 
 
