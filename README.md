@@ -163,5 +163,7 @@ This source-code is being released for specific applications, and for those who 
 -- open shapefile with predicted encoding - hardcoded
 -- apply shapefile crs from image raster - hardcoded
 -- unittest over basic methods: filesystem/IO, organization, params
+-- improve logging: verbose long paths and lack of logs for some processing
+-- unecessary looping in all shapefiles during tiling_vector - optimize
 ```
 
