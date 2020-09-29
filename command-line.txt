@@ -1,8 +1,0 @@
-RASTER TILE:
-python main.py -procedure tiling_raster -image_folder /media/rodolfo/data/bioverse/images/kayapo/training-samples/ -output_folder /media/rodolfo/data/bioverse/images/kayapo/training-samples/raster/ -tile_width 128 -tile_height 128 -verbose True
-
-VECTOR TILE:
-python main.py -procedure tiling_vector -image_tiles /media/rodolfo/data/bioverse/images/kayapo/training-samples/raster/ -output_folder /media/rodolfo/data/bioverse/images/kayapo/training-samples/annotation/shp/ -shapefile_reference /media/rodolfo/data/bioverse/images/kayapo/training-samples/16JUN19140331-M3DS_R01C2-012954101010_01_P001.shp -verbose True   
-
-VECTOR TO PNG:
-python main.py -procedure shp2png -image_folder /media/rodolfo/data/bioverse/images/kayapo/training-samples/raster/ -shapefile_folder /media/rodolfo/data/bioverse/images/kayapo/training-samples/annotation/shp/ -output_folder /media/rodolfo/data/bioverse/images/kayapo/training-samples/annotation/png/ -tile_width 128 -tile_height 128 -verbose True
