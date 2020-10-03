@@ -1,9 +1,7 @@
 import os
 import gdal
-import cv2
 import logging
 import shapefile
-import numpy as np
 import geopandas as gp
 import glob
 import settings
@@ -20,50 +18,7 @@ class Tiling:
     def __init__(self):
         pass
 
-    def unify_color(self, path_input_image, desired_colors):
-        """
-        :param path_input_image:
-        :param desired_colors:
-        :return:
-        """
-        if not os.path.isfile(path_input_image):
-            logging.warning(">>>> {} not a file!".format(path_input_image))
-            return
-
-        dirname = os.path.dirname(path_input_image)
-        filename = os.path.basename(path_input_image)
-        output = os.path.join(dirname, filename + "_unified.png")
-
-        if os.path.isfile(path_input_image):
-            logging.info(">> Unifying facade color classes...")
-            image = cv2.imread(path_input_image)
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-            rows, cols, bands = image.shape
-            im = np.zeros((rows, cols, bands), dtype=np.uint8)
-
-            for i in range(rows):
-                for j in range(cols):
-                    color = image[i, j]
-                    color = map(int, color)
-
-                    if (color == [85, 255, 170]) or (color == [170, 255, 85]):
-                        color_code = desired_colors[4]
-                    elif (color == [0, 85, 255]) or (color == [255, 255, 0]):
-                        color_code = desired_colors[5]
-                    elif (color == [0, 170, 255]) or (color == [170, 0, 0]):
-                        color_code = desired_colors[6]
-                    else:
-                        color_code = desired_colors[3]
-
-                    im[i][j] = color_code
-        else:
-            logging.info(">>>> {} is not a valid file. Check and try again!".format(path_input_image))
-
-        cv2.imwrite(output, cv2.cvtColor(im, cv2.COLOR_RGB2BGR))
-        logging.info("Annotated image with unified classes saved as {}".format(output))
-
-    # TODO: refactor
+    # TODO: refactor slice_array
     def slice_array(self, array, positions):
         """
         :param array:
@@ -115,7 +70,7 @@ class Tiling:
                 continue
 
             if os.path.isfile(shape_path):
-                # TODO: try to predict the encoding - hard-coded
+                # TODO: to predict the encoding - hardcoded
                 r = shapefile.Reader(shape_path, encoding='ISO8859-1')
                 if not r:
                     logging.info('>>>> Error: could not open the shapefile')
@@ -183,6 +138,7 @@ class Tiling:
         :param height:
         :return:
         """
+        # TODO: test with endswith is not working
         if os.path.isfile(image) and image.endswith(settings.VALID_RASTER_EXTENSION):
             filename = os.path.basename(image)
             name, file_extension = os.path.splitext(filename)
@@ -212,6 +168,8 @@ class Tiling:
 
                     except RuntimeError:
                         continue
+        else:
+            logging.info(">>>> Image file {} does not exist or is a invalid extension!".format(image))
 
     def tiling_vector(self, image_tiles_folder, shp_reference, output_folder):
         """
@@ -235,9 +193,12 @@ class Tiling:
             logging.warning(">>>> {} not a valid extension for a vector!".format(file_extension))
             return
 
-        logging.info(">> Tiling vector {} respecting to the tiles extends".format(shp_reference))
-
         list_correspondent_raster = glob.glob(os.path.join(image_tiles_folder, name + '*'))
+        if len(list_correspondent_raster) == 0:
+            logging.info(">>>> No raster tiles with shapefile suffix {}".format(name))
+            return
+
+        logging.info(">> Tiling vector {} respecting to the tiles extends".format(shp_reference))
         for image in list_correspondent_raster:
             filename = os.path.basename(image)
             name, ext = os.path.splitext(filename)
@@ -249,6 +210,7 @@ class Tiling:
             complete_path = os.path.join(image_tiles_folder, image)
             tile = gdal.Open(complete_path)
 
+            prj = tile.GetProjection()
             gt = tile.GetGeoTransform()
             cols_tile = tile.RasterXSize
             rows_tile = tile.RasterYSize
@@ -257,10 +219,10 @@ class Tiling:
             bounds = Polygon(ext)
             baseshp = gp.read_file(shp_reference)
 
-            # TODO: define shapefile crs from image crs
+            # TODO: define shapefile crs from image crs - hardcoded
             # srs = osr.SpatialReference()
-            # srs.ImportFromWkt(tile.GetProjection())
-            baseshp = baseshp.to_crs('epsg:32722')
+            # srs.ImportFromWkt(prj)
+            baseshp = baseshp.to_crs(epsg=32722)
 
             ids = []
             classes = []
@@ -268,6 +230,10 @@ class Tiling:
             for i in range(len(baseshp)):
                 p1 = baseshp['geometry'][i]
                 p2 = bounds
+
+                if p1 is None:
+                    logging.info(">>>>>> Geometry is empty! File {}".format(os.path.basename(shp_reference)))
+                    continue
 
                 if p1.is_valid is False:
                     p1 = p1.buffer(0)
