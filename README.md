@@ -111,6 +111,14 @@ python main.py -procedure shp2png
 ```
 **In Linux, it should be run in main folder**
 
+## Convert the geographic format, to DL known format:
+On going...
+
+```
+./tiff2png.sh PATH_TO_TIFF_FOLDER
+```
+**In Linux, it should be run in main folder**
+
 ## Keras/Pillow format file required:
 Some image formats do not work well over the [Keras framework](https://keras.io/), such as, TIFF format. For that reason, the tiles generated in `tiling_vector` can then be converted in PNG format using `gdal_translate` ([More details](https://gdal.org/programs/gdal_translate.html)), finally get the final version of the Deep Learning input. The shellscript `tiff2png` is an auxiliary file to translate all tiff repository in png format:
 ```
@@ -158,12 +166,9 @@ python main.py -procedure shp2png -image "$RASTER_TILE_OUTPUT" -shapefile_folder
 # TODO-list
 This source-code is being released for specific applications, and for those who probably has similar needs. For this reason, we still have a lot to do in terms of unit tests, python conventions, optimization issues, refactoring, so on! So, Feel free to use and any recommendation or PRs will be totally welcome!
 
-```
--- refactor docstring
--- open shapefile with predicted encoding - hardcoded
--- apply shapefile crs from image raster - hardcoded
--- unittest over basic methods: filesystem/IO, organization, params
--- improve logging: verbose long paths and lack of logs for some processing
--- unecessary looping in all shapefiles during tiling_vector - optimize
-```
-
+- refactor docstring
+- open shapefile with predicted encoding - hardcoded
+- apply shapefile crs from image raster - hardcoded
+- unittest over basic methods: filesystem/IO, organization, params
+- improve logging: verbose long paths and lack of logs for some processing
+- ~~unecessary looping in all shapefiles during tiling_vector - optimize~~``
