@@ -17,8 +17,13 @@ OUTPUT_ANNOTATION=$6
 for entry in "$RASTER_PATH"*
 do
   if [ -f "$entry" ];then
+    filename=$(basename -- "$entry")
+    extension="${filename##*.}"
+    name="${filename%.*}"
+    shp_reference="$VECTOR_PATH$name.shp"
+
     python main.py -procedure tiling_raster -image "$entry" -output "$RASTER_TILE_OUTPUT" -tile_width "$SQUARED_DIMENSION" -tile_height "$SQUARED_DIMENSION" -verbose True &&
-    python main.py -procedure tiling_vector -image_tiles "$RASTER_TILE_OUTPUT" -output "$VECTOR_TILE_OUTPUT" -shapefile_reference "$VECTOR_PATH" -verbose True
+    python main.py -procedure tiling_vector -image_tiles "$RASTER_TILE_OUTPUT" -output "$VECTOR_TILE_OUTPUT" -shapefile_reference "$shp_reference" -verbose True
   fi
 done
 
