@@ -1,5 +1,6 @@
 import os
 import logging
+import shutil
 import settings
 
 from random import shuffle
@@ -11,7 +12,75 @@ class Utils:
     def __init__(self):
         pass
 
+    def check_annotation_extention(self, filepath):
+        """
+        """
+        path = os.path.dirname(filepath)
+        filename = os.path.basename(filepath)
+        name, ext = os.path.splitext(filename)
+
+        for extension in settings.VALID_RASTER_EXTENSION:
+            new_filepath = os.path.join(path, name + extension)
+            if os.path.exists(new_filepath):
+                return new_filepath
+
+        return None
+
+    def split_samples(self, training_folder, validation_folder, percentage):
+        """
+        """
+        train_image_path = os.path.join(training_folder, "image")
+        train_annotation_path = os.path.join(training_folder, "label")
+        validation_image_path = os.path.join(validation_folder, "image")
+        validation_annotation_path = os.path.join(validation_folder, "label")
+
+        if not os.path.exists(training_folder):
+            logging.info(">> Training folder not found: %s", training_folder)
+            return
+        else:
+            if not os.path.exists(train_image_path):
+                os.mkdir(train_image_path)
+
+            if not os.path.exists(train_annotation_path):
+                os.mkdir(train_annotation_path)
+
+        if not os.path.exists(validation_folder):
+            logging.info(">> Validation folder not found: %s", validation_folder)
+            return
+        else:
+            if not os.path.exists(validation_image_path):
+                os.mkdir(validation_image_path)
+
+            if not os.path.exists(validation_annotation_path):
+                os.mkdir(validation_annotation_path)
+
+        list_of_training_image = os.listdir(train_image_path)
+        shuffle(list_of_training_image)
+        splitted_percent_for_val = int(round(len(list_of_training_image) * (int(percentage)/100)))
+
+        validation_list = list_of_training_image[-splitted_percent_for_val:]
+
+        for filename in validation_list:
+            ext2 = os.path.splitext(filename)[1]
+
+            if ext2.lower() not in settings.VALID_RASTER_EXTENSION:
+                continue
+
+            image_train_file = os.path.join(train_image_path, filename)
+            image_val_file = os.path.join(train_annotation_path, filename)
+
+            if not os.path.isfile(image_val_file):
+                image_val_file = self.check_annotation_extention(image_val_file)
+
+            if image_val_file is None:
+                logging.info(">>>> There is no annotation for {} image. Skipped!".format(filename))
+            else:
+                shutil.move(image_train_file, validation_image_path)
+                shutil.move(image_val_file, validation_annotation_path)
+
     def get_only_certain_extension(self, path, extension):
+        """
+        """
         file_list = []
         x = os.listdir(path)
         for i in x:
@@ -20,81 +89,10 @@ class Utils:
         return file_list
 
     def check_file(self, dir, prefix):
+        """
+        """
         for s in os.listdir(dir):
             if os.path.splitext(s)[0] == prefix and os.path.isfile(os.path.join(dir, s)):
                 return True
 
         return False
-
-    def create_test_list(self, image_folder, annotation_folder, output_test_list):
-        with open(output_test_list, 'w+') as output:
-            for filename in os.listdir(image_folder):
-                ext2 = os.path.splitext(filename)[1]
-
-                if ext2.lower() not in settings.VALID_RASTER_EXTENSION:
-                    continue
-
-                absolute_image_name = os.path.join(image_folder, filename)
-                image_name = os.path.basename(absolute_image_name)
-                name, file_extension = os.path.splitext(image_name)
-
-                if self.check_file(annotation_folder, name):
-                    output.write(image_folder + filename + '\n')
-
-    def create_file_list(self, image_folder, annotation_folder, output_file_list):
-        with open(output_file_list, 'w+') as output:
-            for filename in os.listdir(image_folder):
-                ext2 = os.path.splitext(filename)[1]
-
-                if ext2.lower() not in settings.VALID_RASTER_EXTENSION:
-                    continue
-
-                absolute_image_name = os.path.join(image_folder, filename)
-                image_name = os.path.basename(absolute_image_name)
-
-                name, file_extension = os.path.splitext(image_name)
-
-                annotation_name = annotation_folder + name + desired_ann_ext
-
-                if self.check_file(annotation_folder, name):
-                    output.write(image_folder + filename + ' ' + annotation_name + '\n')
-
-    def prepare_inputs(self, image_folder, annotation_folder, output, percentage_val):
-        all_file = "all.txt"
-        train_file = "train.txt"
-        val_file = "val.txt"
-        test_file = "tests.txt"
-
-        file_list = os.path.join(output, all_file)
-        train_file = os.path.join(output, train_file)
-        val_file = os.path.join(output, val_file)
-        test_file = os.path.join(output, test_file)
-
-        if not os.path.exists(image_folder):
-            logging.info(">> Image folder not found: %s", image_folder)
-            exit(1)
-
-        if not os.path.exists(annotation_folder):
-            logging.info(">> Annotation folder not found: %s", annotation_folder)
-            exit(1)
-
-        self.create_file_list(image_folder, annotation_folder, file_list)
-        self.create_test_list(image_folder, annotation_folder, test_file)
-
-        files = [line for line in open(file_list)]
-        shuffle(files)
-
-        percentage_val = int(round(len(files) * (percentage_val / 100)))
-
-        train = files[:-percentage_val]
-        val = files[-percentage_val:]
-
-        with open(train_file, 'w+') as file:
-            for label in train:
-                file.write(label)
-
-        with open(val_file, 'w+') as file:
-            for label in val:
-                file.write(label)
-
-        logging.info(">> CNN inputs created successfully!")
