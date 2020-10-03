@@ -111,13 +111,24 @@ python main.py -procedure shp2png
 ```
 **In Linux, it should be run in main folder**
 
+## Split the training and validation datasets:
+On going...
+
+```
+python main.py -procedure split_samples
+               -training_folder COMPLETE_PATH_TO_TRAINING_FOLDER/
+               -validation_folder COMPLETE_PATH_TO_VALIDATION_FOLDER/                       
+               -percentage PERCENT_DESTINATION_FOR_VALIDATION_IMAGES/
+               -verbose BOOLEAN
+```
+
 ## Convert the geographic format, to DL known format:
 On going...
 
 ```
 ./tiff2png.sh PATH_TO_TIFF_FOLDER
 ```
-**In Linux, it should be run in main folder**
+**In Linux, it should be run in the `scripts` folder**
 
 ## Keras/Pillow format file required:
 Some image formats do not work well over the [Keras framework](https://keras.io/), such as, TIFF format. For that reason, the tiles generated in `tiling_vector` can then be converted in PNG format using `gdal_translate` ([More details](https://gdal.org/programs/gdal_translate.html)), finally get the final version of the Deep Learning input. The shellscript `tiff2png` is an auxiliary file to translate all tiff repository in png format:
