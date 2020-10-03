@@ -1,4 +1,3 @@
-import os
 import sys
 import logging
 import argparse
@@ -7,7 +6,6 @@ import settings
 from coloredlogs import ColoredFormatter
 from tile import tiling
 from utils import utils
-from processing import preprocessing
 
 
 def main(arguments):
@@ -27,12 +25,7 @@ def main(arguments):
         elif arguments.procedure == 'tiling_vector':
             if (arguments.image_tiles is not None) and (arguments.shapefile_reference is not None) and \
                     (arguments.output is not None):
-
-                shapefile_list = utils.Utils().get_only_certain_extension(arguments.shapefile_reference, ".shp")
-
-                for file in shapefile_list:
-                    shp_complete_path = os.path.join(arguments.shapefile_reference, file)
-                    tiling.Tiling().tiling_vector(arguments.image_tiles, shp_complete_path, arguments.output)
+                tiling.Tiling().tiling_vector(arguments.image_tiles, arguments.shapefile_reference, arguments.output)
             else:
                 logging.error(">> One of arguments (image_tiles, shapefile_reference, output_folder) are incorrect or "
                               "empty. Try it again!")
@@ -46,37 +39,55 @@ def main(arguments):
                 logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
                               "empty. Try it again!")
                 raise RuntimeError
+
+        elif arguments.procedure == 'split_samples':
+            if (arguments.training_folder is not None) and (arguments.validation_folder is not None) and \
+                    (arguments.percentage is not None):
+                utils.Utils().split_samples(arguments.training_folder, arguments.validation_folder,
+                                            arguments.percentage)
+            else:
+                logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
+                              "empty. Try it again!")
+                raise RuntimeError
         else:
             logging.error(">> Procedure option not found. Try it again!")
             raise RuntimeError
 
 
 if __name__ == '__main__':
-    """ Command-line routine that through two folders: original images and ground-truth, build validation, testing 
-    and training .txt files. Each line in these files represents pairs of paths: original raster SPACE raster reference. 
-    In the training file, all the pairs of images to be used in the training of the neural model are listed, while in 
-    the validation file, images are placed for validation according to the percentage specified 
+    """ 
+    Command-line routine for supervised samples preparation. This set of commands combine the tiling of remote
+     sensing datasets and geographic vector layers (shapefile), in order to model the inputs for most deep learning 
+     frameworks available. It actually convert massive images in small patches with its respective references 
+     (i.e. annotation images)
+     
     USAGE:
         python main.py -procedure tiling_raster 
-                       -image /data/bioverse/images/cachoeira-porteira/pan-sharp-mosaic/FILE.TIF 
-                       -output /data/bioverse/images/cachoeira-porteira/pan-sharp-mosaic/tiles/
-                       -tile_width 128 -tile_height 128 
-                       -verbose True
+                       -image /PATH/FILE.TIF 
+                       -output PATH_TO_OUTPUT_RASTER_TILES/
+                       -tile_width INT -tile_height INT 
+                       -verbose BOOLEAN
         python main.py -procedure tiling_vector
-                       -image_tiles /data/bioverse/images/cachoeira-porteira/pan-sharp-mosaic/tiles/ 
-                       -output /data/bioverse/images/cachoeira-porteira/pan-sharp-mosaic/annotation/
-                       -shapefile_reference /data/bioverse/images/cachoeira-porteira/ground_reference/*.shp
-                       -verbose True     
+                       -image_tiles PATH_TO_RASTER_TILES/
+                       -output PATH_TO_OUTPUT_VECTOR_TILES/
+                       -shapefile_reference /PATH/REFERENCE.SHP
+                       -verbose BOOLEAN     
         python main.py -procedure shp2png
-                       -shapefile_folder /data/prodes/dl/deforestation/ground-truth/tiles/vector/
-                       -output /data/prodes/dl/deforestation/ground-truth/tiles/png/
-                       -tile_width 256 -tile_height 256
-                       -verbose True
+                       -shapefile_folder PATH_TO_VECTOR_TILES/
+                       -output PATH_TO_OUTPUT_PNG_TILES/
+                       -tile_width INT -tile_height INT 
+                       -verbose BOOLEAN
+        python main.py -procedure split_samples
+                       -training_folder COMPLETE_PATH_TO_TRAINING_FOLDER/
+                       -validation_folder COMPLETE_PATH_TO_VALIDATION_FOLDER/                       
+                       -percentage PERCENT_DESTINATION_FOR_VALIDATION_IMAGES/
+                       -verbose BOOLEAN
     """
     parser = argparse.ArgumentParser(description='Prepare input files for supervised neural network procedures')
 
     parser.add_argument('-procedure', action="store", dest='procedure', help='Procedure to be performed. Options: '
-                                                                             'tiling_vector, tiling_raster, shp2png')
+                                                                             'tiling_vector, tiling_raster, '
+                                                                             'shp2png, split_samples')
     parser.add_argument('-image', action="store", dest='image', help='Images folder: the complete path to the images '
                                                                      'to be tiled')
     parser.add_argument('-image_tiles', action="store", dest='image_tiles', help='Images tiles: the complete path to '
@@ -85,10 +96,24 @@ if __name__ == '__main__':
     parser.add_argument('-shapefile_reference', action="store", dest='shapefile_reference',
                         help='ESRI Shapefile to be used as reference to generate the respective annotation for image '
                              'tiles. The image_folder argument, in this case, has to be the image tiles folder')
-    parser.add_argument('-shapefile_folder', action="store", dest='shapefile_folder', help='')
-    parser.add_argument('-tile_width', action="store", dest='width', type=int, help='Tile width')
-    parser.add_argument('-tile_height', action="store", dest='height', type=int, help='Tile height')
-    parser.add_argument('-verbose', action="store", dest='verbose', help='Print log of processing')
+    parser.add_argument('-shapefile_folder', action="store", dest='shapefile_folder', help='Shapefile tiles folder: '
+                                                                                           'the complete path to '
+                                                                                           'the vector tiles')
+    parser.add_argument('-tile_width', action="store", dest='width', type=int, help='Integer tile width')
+    parser.add_argument('-tile_height', action="store", dest='height', type=int, help='Integer tile height')
+    parser.add_argument('-training_folder', action="store", dest='training_folder', help='The training folder with '
+                                                                                         'image/ and label/ datasets')
+    parser.add_argument('-validation_folder', action="store", dest='validation_folder', help='The validation folder '
+                                                                                             'with image/ and label/ '
+                                                                                             'folders. The '
+                                                                                             'split_samples procedure '
+                                                                                             'will cut a percentage of '
+                                                                                             'training imagens and will '
+                                                                                             'place it here')
+    parser.add_argument('-percentage', action="store", dest='percentage', help='Amount of training samples to be used '
+                                                                               'for validation')
+    parser.add_argument('-verbose', action="store", dest='verbose', help='Boolean (True or False) '
+                                                                         'for printing log or not')
 
     args = parser.parse_args()
 
