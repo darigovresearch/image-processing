@@ -34,7 +34,7 @@ def main(arguments):
             if (arguments.image is not None) and (arguments.shapefile_folder is not None) and \
                     (arguments.output is not None) and (arguments.width is not None) and (arguments.height is not None):
                 tiling.Tiling().shp2png(arguments.image, arguments.shapefile_folder, arguments.output,
-                                        arguments.width, arguments.height, settings.CLASSES)
+                                        arguments.width, arguments.height, settings.CLASSES, True)
             else:
                 logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
                               "empty. Try it again!")
@@ -46,7 +46,7 @@ def main(arguments):
                 utils.Utils().split_samples(arguments.training_folder, arguments.validation_folder,
                                             arguments.percentage)
             else:
-                logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
+                logging.error(">> One of arguments (training_folder, validation_folder, percentage) are incorrect or "
                               "empty. Try it again!")
                 raise RuntimeError
         else:
@@ -73,6 +73,7 @@ if __name__ == '__main__':
                        -shapefile_reference /PATH/REFERENCE.SHP
                        -verbose BOOLEAN     
         python main.py -procedure shp2png
+                       -image PATH_TO_RASTER_TILES/
                        -shapefile_folder PATH_TO_VECTOR_TILES/
                        -output PATH_TO_OUTPUT_PNG_TILES/
                        -tile_width INT -tile_height INT 

@@ -7,8 +7,14 @@ VALID_VECTOR_EXTENSION = ".shp"
 
 CLASS_NAME = 'class'
 CLASSES = {
-    "nut": [102, 153, 0],
-    "palm": [153, 255, 153]
+    'color': {
+        "nut": [102, 153, 0],
+        "palm": [153, 255, 153]
+    },
+    'type': {
+        "nut": 1,
+        "palm": 2
+    }
 }
 
 

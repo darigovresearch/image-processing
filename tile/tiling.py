@@ -33,7 +33,7 @@ class Tiling:
 
         return new_arrays
 
-    def shp2png(self, raster_folder, shapefile_folder, output_folder, width, height, classes):
+    def shp2png(self, raster_folder, shapefile_folder, output_folder, width, height, classes, is_grayscale):
         """
         Source: https://github.com/GeospatialPython/geospatialpython/blob/master/shp2img.py
         Example of classes variable:
@@ -49,6 +49,7 @@ class Tiling:
         :param width:
         :param height:
         :param classes:
+        :param is_grayscale: if True, the label images is built with CLASSES ID instead of CLASSES COLOR
         :return:
         """
         files = os.listdir(shapefile_folder)
@@ -87,13 +88,26 @@ class Tiling:
             shapes = r.shapes()
             records = r.records()
 
-            img = Image.new("RGB", (width, height), "black")
+            if is_grayscale is True:
+                img = Image.new("L", (width, height), "black")
+                classes_content = classes['type']
+            else:
+                img = Image.new("RGB", (width, height), "black")
+                classes_content = classes['color']
+
             draw = ImageDraw.Draw(img)
 
             for i, record in enumerate(records):
-                if record[1] in classes:
+                if record[1] in classes_content:
                     parts = shapes[i].parts
                     pixels = []
+
+                    if is_grayscale is True:
+                        fill_color = classes_content[record[1]]
+                    else:
+                        fill_color = "rgb(" + str(classes[classes_content[1]][0]) + ", " + str(
+                            classes_content[record[1]][1]) + ", " + str(classes_content[record[1]][2]) + ")"
+
                     for x, y in shapes[i].points:
                         px = int(width - ((ext[3][0] - x) * x_ratio))
                         py = int((ext[3][1] - y) * y_ratio)
@@ -103,11 +117,9 @@ class Tiling:
                         polygons_parts = self.slice_array(pixels, parts)
                         for k in range(len(polygons_parts)):
                             draw.polygon(polygons_parts[k], outline=None,
-                                         fill="rgb(" + str(classes[record[1]][0]) + ", " + str(
-                                             classes[record[1]][1]) + ", " + str(classes[record[1]][2]) + ")")
+                                         fill=fill_color)
                     else:
-                        draw.polygon(pixels, outline=None, fill="rgb(" + str(classes[record[1]][0]) + ", " + str(
-                            classes[record[1]][1]) + ", " + str(classes[record[1]][2]) + ")")
+                        draw.polygon(pixels, outline=None, fill=fill_color)
             img.save(output)
 
     def get_extent(self, gt, cols, rows):
@@ -163,7 +175,7 @@ class Tiling:
                     try:
                         output = os.path.join(output_folder, name + "_" + str(i) + "_" + str(j) + file_extension)
                         gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
-                                       outputType=gdal.GDT_UInt16, scaleParams=[[list(zip(*[vmin, vmax]))]],
+                                       outputType=gdal.GDT_Byte, scaleParams=[[list(zip(*[vmin, vmax]))]],
                                        options=['-epo', '-eco', '-b', '5', '-b', '3', '-b', '2'])
 
                     except RuntimeError:

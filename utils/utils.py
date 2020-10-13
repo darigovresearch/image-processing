@@ -1,7 +1,9 @@
 import os
+import cv2
 import logging
 import shutil
 import settings
+import numpy as np
 
 from random import shuffle
 
