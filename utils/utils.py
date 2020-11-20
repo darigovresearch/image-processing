@@ -1,22 +1,28 @@
 import os
-import cv2
 import logging
 import shutil
 import settings
-import numpy as np
 
 from random import shuffle
 
 
 class Utils:
     """
+    Class with essentials and general methods for multiple purposes in image processing
     """
 
     def __init__(self):
+        """
+        Constructor method
+        """
         pass
 
     def check_annotation_extention(self, filepath):
         """
+        Check the annotation extension according to the accepted ones in settings
+
+        :param filepath: absolute path to annotated images
+        :return: returns the new_filepath if
         """
         path = os.path.dirname(filepath)
         filename = os.path.basename(filepath)
@@ -31,6 +37,12 @@ class Utils:
 
     def split_samples(self, training_folder, validation_folder, percentage):
         """
+        Shuffle all images in training_folder, separate a percentage of them, then, move it to validation_folder
+
+        :param training_folder: absolute path to the training folder (raster)
+        :param validation_folder: absolute path to the validation folder (labels)
+        :param percentage: int 0-100, describing the percentage of images from training_folder will be moved to
+        the validation_folder
         """
         train_image_path = os.path.join(training_folder, "image")
         train_annotation_path = os.path.join(training_folder, "label")
@@ -83,6 +95,11 @@ class Utils:
 
     def get_only_certain_extension(self, path, extension):
         """
+        List all files in path, with a specific extension
+
+        :param path: absolute path to a certain directory
+        :param extension: the file extension to search for
+        :return file_list: an array of files with specific extension
         """
         file_list = []
         x = os.listdir(path)
@@ -90,12 +107,3 @@ class Utils:
             if i.endswith(extension):
                 file_list.append(i)
         return file_list
-
-    def check_file(self, dir, prefix):
-        """
-        """
-        for s in os.listdir(dir):
-            if os.path.splitext(s)[0] == prefix and os.path.isfile(os.path.join(dir, s)):
-                return True
-
-        return False
