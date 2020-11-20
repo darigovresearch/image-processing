@@ -9,7 +9,8 @@ from random import shuffle
 
 
 class Utils:
-    """ """
+    """
+    """
 
     def __init__(self):
         pass

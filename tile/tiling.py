@@ -105,7 +105,7 @@ class Tiling:
                     if is_grayscale is True:
                         fill_color = classes_content[record[1]]
                     else:
-                        fill_color = "rgb(" + str(classes[classes_content[1]][0]) + ", " + str(
+                        fill_color = "rgb(" + str(classes_content[record[1]][0]) + ", " + str(
                             classes_content[record[1]][1]) + ", " + str(classes_content[record[1]][2]) + ")"
 
                     for x, y in shapes[i].points:

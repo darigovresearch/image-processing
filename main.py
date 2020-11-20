@@ -34,7 +34,7 @@ def main(arguments):
             if (arguments.image is not None) and (arguments.shapefile_folder is not None) and \
                     (arguments.output is not None) and (arguments.width is not None) and (arguments.height is not None):
                 tiling.Tiling().shp2png(arguments.image, arguments.shapefile_folder, arguments.output,
-                                        arguments.width, arguments.height, settings.CLASSES, True)
+                                        arguments.width, arguments.height, settings.CLASSES, False)
             else:
                 logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
                               "empty. Try it again!")
@@ -62,26 +62,26 @@ if __name__ == '__main__':
      (i.e. annotation images)
      
     USAGE:
-        python main.py -procedure tiling_raster 
+        > python main.py -procedure tiling_raster 
                        -image /PATH/FILE.TIF 
                        -output PATH_TO_OUTPUT_RASTER_TILES/
                        -tile_width INT -tile_height INT 
                        -verbose BOOLEAN
-        python main.py -procedure tiling_vector
+        > python main.py -procedure tiling_vector
                        -image_tiles PATH_TO_RASTER_TILES/
                        -output PATH_TO_OUTPUT_VECTOR_TILES/
                        -shapefile_reference /PATH/REFERENCE.SHP
                        -verbose BOOLEAN     
-        python main.py -procedure shp2png
+        > python main.py -procedure shp2png
                        -image PATH_TO_RASTER_TILES/
                        -shapefile_folder PATH_TO_VECTOR_TILES/
                        -output PATH_TO_OUTPUT_PNG_TILES/
                        -tile_width INT -tile_height INT 
                        -verbose BOOLEAN
-        python main.py -procedure split_samples
+        > python main.py -procedure split_samples
                        -training_folder COMPLETE_PATH_TO_TRAINING_FOLDER/
                        -validation_folder COMPLETE_PATH_TO_VALIDATION_FOLDER/                       
-                       -percentage PERCENT_DESTINATION_FOR_VALIDATION_IMAGES/
+                       -percentage PERCENT_DESTINATION_FOR_VALIDATION_IMAGES
                        -verbose BOOLEAN
     """
     parser = argparse.ArgumentParser(description='Prepare input files for supervised neural network procedures')
@@ -109,8 +109,8 @@ if __name__ == '__main__':
                                                                                              'folders. The '
                                                                                              'split_samples procedure '
                                                                                              'will cut a percentage of '
-                                                                                             'training imagens and will '
-                                                                                             'place it here')
+                                                                                             'training imagens and will'
+                                                                                             ' place it here')
     parser.add_argument('-percentage', action="store", dest='percentage', help='Amount of training samples to be used '
                                                                                'for validation')
     parser.add_argument('-verbose', action="store", dest='verbose', help='Boolean (True or False) '
