@@ -10,8 +10,9 @@ from utils import utils
 
 def main(arguments):
     """
-    :param arguments:
-    :return :
+    Method to start the workflow of image processing
+
+    :param arguments: the arguments passed by the user. Determines which procedure will be performed
     """
     if arguments.procedure is not None:
         if arguments.procedure == 'tiling_raster':
@@ -34,7 +35,7 @@ def main(arguments):
             if (arguments.image is not None) and (arguments.shapefile_folder is not None) and \
                     (arguments.output is not None) and (arguments.width is not None) and (arguments.height is not None):
                 tiling.Tiling().shp2png(arguments.image, arguments.shapefile_folder, arguments.output,
-                                        arguments.width, arguments.height, settings.CLASSES, False)
+                                        arguments.width, arguments.height, settings.CLASSES, 'rgb')
             else:
                 logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
                               "empty. Try it again!")
@@ -61,7 +62,7 @@ if __name__ == '__main__':
      frameworks available. It actually convert massive images in small patches with its respective references 
      (i.e. annotation images)
      
-    USAGE:
+    Usage:
         > python main.py -procedure tiling_raster 
                        -image /PATH/FILE.TIF 
                        -output PATH_TO_OUTPUT_RASTER_TILES/
@@ -111,8 +112,9 @@ if __name__ == '__main__':
                                                                                              'will cut a percentage of '
                                                                                              'training imagens and will'
                                                                                              ' place it here')
-    parser.add_argument('-percentage', action="store", dest='percentage', help='Amount of training samples to be used '
-                                                                               'for validation')
+    parser.add_argument('-percentage', action="store", dest='percentage', help='Integer [0-100] denoting the amount of '
+                                                                               'training samples to be used for '
+                                                                               'validation')
     parser.add_argument('-verbose', action="store", dest='verbose', help='Boolean (True or False) '
                                                                          'for printing log or not')
 

@@ -8,7 +8,7 @@ from random import shuffle
 
 class Utils:
     """
-    Class with essentials and general methods for multiple purposes in image processing
+    Class with essentials and general methods for multiple purposes to support the image processing routines
     """
 
     def __init__(self):

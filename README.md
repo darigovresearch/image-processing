@@ -140,7 +140,7 @@ do
     filename=$(basename -- "$entry")
     extension="${filename##*.}"
     name="${filename%.*}"
-    gdal_translate -of PNG -ot UInt16 $dir$filename $dir$name".PNG"
+    gdal_translate -of PNG -B 1 -B 2 -B 3 $dir$filename $dir$name".PNG"
     rm $entry
     rm $dir$name".PNG.aux.xml"
   fi
