@@ -157,7 +157,7 @@ class Tiling:
 
         :param raster_folder: the absolute path to raster, with all georeferenced information
         :param shapefile_folder: the absolute path to the vector file, with polygons representing the location
-        of interest objects
+                                 of interest objects
         :param output_folder: the absolute path to the outputs
         :param width: the width of each tile presented in shapefile_folder
         :param height: the width of each tile presented in shapefile_folder
@@ -217,7 +217,7 @@ class Tiling:
 
         Source:
             - https://gis.stackexchange.com/questions/57834/
-            how-to-get-raster-corner-coordinates-using-python-gdal-bindings
+              how-to-get-raster-corner-coordinates-using-python-gdal-bindings
 
         :param gt: the GeoTransform metadata from geographic raster tile
         :param cols: the number of columns in tile
@@ -284,7 +284,7 @@ class Tiling:
 
         :param image_tiles_folder: the absolute path to the image file (raster)
         :param shp_reference: the vector file to be tiled, which shares the same region as the
-        images presented in image_tiles_folder
+                              images presented in image_tiles_folder
         :param output_folder: the absolute path to the outputs
         """
         if not os.path.isdir(image_tiles_folder):

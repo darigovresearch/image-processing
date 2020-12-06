@@ -16,7 +16,7 @@
 # Bioverse Labs (image-processing module)
 The image-processing module incorporate essential procedures to prepare remote sensing images mostly for automatic classification methods, in this case specifically, deep-learning approaches. 
 
-Beyond the routines, three main methods have been developed: image tiling, vector tiling, annotation images preparation, among other independent preprocessing procedures (available in `/scripts`).
+Beyond the routines, three main methods have been developed: image tiling, vector tiling, annotation images preparation, among other independent preprocessing procedures (available in `/scripts` - in `bash`).
 
 **All modules available here are under construction. Therefore, many errors and malfunctions can occur.**
 
@@ -47,6 +47,7 @@ source .venv/bin/activate
 as soon you have it done, you are ready to install the requirements.
 
 ## Installing `requirements.txt`
+If everything is correct, and you **virtualenv** is activated, execute:
 ```
 pip install -r requirements.txt
 ```
@@ -177,7 +178,7 @@ python main.py -procedure shp2png -image "$RASTER_TILE_OUTPUT" -shapefile_folder
 # TODO-list
 This source-code is being released for specific applications, and for those who probably has similar needs. For this reason, we still have a lot to do in terms of unit tests, python conventions, optimization issues, refactoring, so on! So, Feel free to use and any recommendation or PRs will be totally welcome!
 
-- refactor docstring
+- ~~refactor docstring~~``
 - open shapefile with predicted encoding - hardcoded
 - apply shapefile crs from image raster - hardcoded
 - unittest over basic methods: filesystem/IO, organization, params

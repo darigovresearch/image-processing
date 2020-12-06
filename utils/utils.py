@@ -42,7 +42,7 @@ class Utils:
         :param training_folder: absolute path to the training folder (raster)
         :param validation_folder: absolute path to the validation folder (labels)
         :param percentage: int 0-100, describing the percentage of images from training_folder will be moved to
-        the validation_folder
+                           the validation_folder
         """
         train_image_path = os.path.join(training_folder, "image")
         train_annotation_path = os.path.join(training_folder, "label")
