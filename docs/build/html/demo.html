@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Demo and Examples &mdash; image-processing 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="TODO list" href="todo.html" />
+    <link rel="prev" title="Installation" href="installing.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/bioverse-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Demo and examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Demo and Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-raster-tilling">Running the raster tilling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-vector-tilling">Running the vector tilling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-shp-to-png-conversion">Running the SHP to PNG conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#split-the-training-and-validation-datasets">Split the training and validation datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convert-the-geographic-format-to-dl-known-format">Convert the geographic format, to DL known format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#keras-pillow-format-file-required">Keras/Pillow format file required</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bash-for-sequential-processing-run-sh">Bash for sequential processing <cite>run.sh</cite></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">TODO list</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO list</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">image-processing</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Demo and Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/demo.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="demo-and-examples">
+<h1>Demo and Examples<a class="headerlink" href="#demo-and-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-the-raster-tilling">
+<h3>Running the raster tilling<a class="headerlink" href="#running-the-raster-tilling" title="Permalink to this headline">¶</a></h3>
+<p>The raster tiling consists in crop the full image in small peaces in order to get a required dimension for most of the supervised classifiers.</p>
+<p>Here, the procedure demands 6 arguments, which are the procedure to be executed (<cite>-procedure</cite>), the full image path (TIFF format - <cite>-image</cite>), the output to the tiles (<cite>-output</cite>), the width dimension of the tiles (<cite>-tile_width</cite>), the height dimension of the tiles (<cite>-tile_height</cite>), and a boolean verbose outcomes (<cite>-verbose</cite>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">procedure</span> <span class="n">tiling_raster</span>
+               <span class="o">-</span><span class="n">image</span> <span class="n">PATH_TO_FULL_IMAGE_IN_TIFF_FORMAT</span>
+               <span class="o">-</span><span class="n">output</span> <span class="n">PATH_TO_OUTPUT_RASTER_TILES</span>
+               <span class="o">-</span><span class="n">tile_width</span> <span class="n">DIMESION_OF_TILES</span>
+               <span class="o">-</span><span class="n">tile_height</span> <span class="n">DIMESION_OF_TILES</span>
+               <span class="o">-</span><span class="n">verbose</span> <span class="n">BOOLEAN</span>
+</pre></div>
+</div>
+<p><strong>In Linux, it should be run in main folder</strong></p>
+</div>
+<div class="section" id="running-the-vector-tilling">
+<h3>Running the vector tilling<a class="headerlink" href="#running-the-vector-tilling" title="Permalink to this headline">¶</a></h3>
+<p>The vector tiling consists in crop the full shapefile in small peaces according to the raster tiles extends processed before. The procedure saves a tiled shapefile if the full shapefile intersect a raster tile. If it does not intersect, the raster tile is then deleted (in order to save space).</p>
+<p>Here, the procedure demands 6 arguments, which are the procedure to be executed (<cite>-procedure</cite>), the full shapefile path (SHP format - <cite>-image_tiles</cite>), the output to the tiles (<cite>-output</cite>), the shapefile reference (<cite>-shapefile_reference</cite>), and a boolean verbose outcomes (<cite>-verbose</cite>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">procedure</span> <span class="n">tiling_vector</span>
+               <span class="o">-</span><span class="n">image_tiles</span> <span class="n">PATH_TO_OUTPUT_RASTER_TILES</span>
+               <span class="o">-</span><span class="n">output</span> <span class="n">PATH_TO_OUTPUT_VECTOR_TILES</span>
+               <span class="o">-</span><span class="n">shapefile_reference</span> <span class="n">PATH_TO_REFERENCE_SHAPEFILES</span>
+               <span class="o">-</span><span class="n">verbose</span> <span class="n">BOOLEAN</span>
+</pre></div>
+</div>
+<p><strong>In Linux, it should be run in main folder</strong></p>
+</div>
+<div class="section" id="running-the-shp-to-png-conversion">
+<h3>Running the SHP to PNG conversion<a class="headerlink" href="#running-the-shp-to-png-conversion" title="Permalink to this headline">¶</a></h3>
+<p>The vector tiling consists in crop the full shapefile in small peaces according to the raster tiles extends processed before. The procedure saves a tiled shapefile if the full shapefile intersect a raster tile. If it does not intersect, the raster tile is then deleted (in order to save space).</p>
+<p>Here, the procedure demands 6 arguments, which are the procedure to be executed (<cite>-procedure</cite>), the shapefile tiles path (<cite>-shapefile_folder</cite>), the output to the final annotation images (<cite>-output</cite>), the width dimension of the tiles (<cite>-tile_width</cite>), the height dimension of the tiles (<cite>-tile_height</cite>), and a boolean verbose outcomes (<cite>-verbose</cite>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">procedure</span> <span class="n">shp2png</span>
+               <span class="o">-</span><span class="n">shapefile_folder</span> <span class="n">PATH_TO_VECTOR_TILES</span>
+               <span class="o">-</span><span class="n">output</span> <span class="n">PATH_TO_SAVE_ANNOTATION_IMAGES</span>
+               <span class="o">-</span><span class="n">tile_width</span> <span class="n">DIMESION_OF_TILES</span>
+               <span class="o">-</span><span class="n">tile_height</span> <span class="n">DIMESION_OF_TILES</span>
+               <span class="o">-</span><span class="n">verbose</span> <span class="n">BOOLEAN</span>
+</pre></div>
+</div>
+<p><strong>In Linux, it should be run in main folder</strong></p>
+</div>
+<div class="section" id="split-the-training-and-validation-datasets">
+<h3>Split the training and validation datasets<a class="headerlink" href="#split-the-training-and-validation-datasets" title="Permalink to this headline">¶</a></h3>
+<p>On going…</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">procedure</span> <span class="n">split_samples</span>
+               <span class="o">-</span><span class="n">training_folder</span> <span class="n">COMPLETE_PATH_TO_TRAINING_FOLDER</span><span class="o">/</span>
+               <span class="o">-</span><span class="n">validation_folder</span> <span class="n">COMPLETE_PATH_TO_VALIDATION_FOLDER</span><span class="o">/</span>
+               <span class="o">-</span><span class="n">percentage</span> <span class="n">PERCENT_DESTINATION_FOR_VALIDATION_IMAGES</span><span class="o">/</span>
+               <span class="o">-</span><span class="n">verbose</span> <span class="n">BOOLEAN</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="convert-the-geographic-format-to-dl-known-format">
+<h3>Convert the geographic format, to DL known format<a class="headerlink" href="#convert-the-geographic-format-to-dl-known-format" title="Permalink to this headline">¶</a></h3>
+<p>On going…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tiff2png.sh PATH_TO_TIFF_FOLDER
+</pre></div>
+</div>
+<p><strong>In Linux, it should be run in the `scripts` folder</strong></p>
+</div>
+<div class="section" id="keras-pillow-format-file-required">
+<h3>Keras/Pillow format file required<a class="headerlink" href="#keras-pillow-format-file-required" title="Permalink to this headline">¶</a></h3>
+<p>Some image formats do not work well over the <a class="reference external" href="https://keras.io/">Keras framework</a>, such as, TIFF format. For that reason, the tiles generated in <cite>tiling_vector</cite> can then be converted in PNG format using <cite>gdal_translate</cite> <a class="reference external" href="https://gdal.org/programs/gdal_translate.html">More details</a>, finally get the final version of the Deep Learning input. The shellscript <cite>tiff2png</cite> is an auxiliary file to translate all tiff repository in png format:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> entry in <span class="nv">$1</span>*
+<span class="k">do</span>
+  <span class="k">if</span> <span class="o">[</span> -f <span class="s2">&quot;</span><span class="nv">$entry</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span><span class="k">then</span>
+    <span class="nv">dir</span><span class="o">=</span><span class="k">$(</span>dirname <span class="s2">&quot;</span><span class="nv">$entry</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;/&quot;</span>
+    <span class="nv">filename</span><span class="o">=</span><span class="k">$(</span>basename -- <span class="s2">&quot;</span><span class="nv">$entry</span><span class="s2">&quot;</span><span class="k">)</span>
+    <span class="nv">extension</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">filename</span><span class="p">##*.</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nv">name</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">filename</span><span class="p">%.*</span><span class="si">}</span><span class="s2">&quot;</span>
+    gdal_translate -of PNG -B <span class="m">1</span> -B <span class="m">2</span> -B <span class="m">3</span> <span class="nv">$dir$filename</span> <span class="nv">$dir$name</span><span class="s2">&quot;.PNG&quot;</span>
+    rm <span class="nv">$entry</span>
+    rm <span class="nv">$dir$name</span><span class="s2">&quot;.PNG.aux.xml&quot;</span>
+  <span class="k">fi</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>just under <cite>scripts/</cite> folder, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tiff2png PATH_TO_TIFF_FOLDER
+</pre></div>
+</div>
+</div>
+<div class="section" id="bash-for-sequential-processing-run-sh">
+<h3>Bash for sequential processing <cite>run.sh</cite><a class="headerlink" href="#bash-for-sequential-processing-run-sh" title="Permalink to this headline">¶</a></h3>
+<p>Compiling the three procedures in one, the shellscript <cite>run.sh</cite>, in <cite>/scripts</cite> can be then apply for multiple images and shapefiles, generating a consistent amount of samples. So, this file simply summary all processing until the final pair of training samples, which is the pair of image and its correspondent reference (annotation image). So, the only thing needed are the full images (preference in <cite>.tiff</cite> format), and its full correspondent shapefiles (ESRI Shapefile format - <cite>.shp</cite> extension).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">RASTER_PATH</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">RASTER_TILE_OUTPUT</span><span class="o">=</span><span class="nv">$2</span>
+<span class="nv">SQUARED_DIMENSION</span><span class="o">=</span><span class="nv">$3</span>
+<span class="nv">VECTOR_PATH</span><span class="o">=</span><span class="nv">$4</span>
+<span class="nv">VECTOR_TILE_OUTPUT</span><span class="o">=</span><span class="nv">$5</span>
+<span class="nv">OUTPUT_ANNOTATION</span><span class="o">=</span><span class="nv">$6</span>
+
+<span class="k">for</span> entry in <span class="s2">&quot;</span><span class="nv">$RASTER_PATH</span><span class="s2">&quot;</span>*
+<span class="k">do</span>
+  <span class="k">if</span> <span class="o">[</span> -f <span class="s2">&quot;</span><span class="nv">$entry</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span><span class="k">then</span>
+    <span class="nv">filename</span><span class="o">=</span><span class="k">$(</span>basename <span class="nv">$entry</span><span class="k">)</span>
+
+    python main.py -procedure tiling_raster -image <span class="s2">&quot;</span><span class="nv">$entry</span><span class="s2">&quot;</span> -output <span class="s2">&quot;</span><span class="nv">$RASTER_TILE_OUTPUT</span><span class="s2">&quot;</span> -tile_width <span class="s2">&quot;</span><span class="nv">$SQUARED_DIMENSION</span><span class="s2">&quot;</span> -tile_height <span class="s2">&quot;</span><span class="nv">$SQUARED_DIMENSION</span><span class="s2">&quot;</span> -verbose True <span class="o">&amp;&amp;</span>
+    python main.py -procedure tiling_vector -image_tiles <span class="s2">&quot;</span><span class="nv">$RASTER_TILE_OUTPUT</span><span class="s2">&quot;</span> -output <span class="s2">&quot;</span><span class="nv">$VECTOR_TILE_OUTPUT</span><span class="s2">&quot;</span> -shapefile_reference <span class="s2">&quot;</span><span class="nv">$VECTOR_PATH</span><span class="s2">&quot;</span> -verbose True
+  <span class="k">fi</span>
+<span class="k">done</span>
+
+python main.py -procedure shp2png -image <span class="s2">&quot;</span><span class="nv">$RASTER_TILE_OUTPUT</span><span class="s2">&quot;</span> -shapefile_folder <span class="s2">&quot;</span><span class="nv">$VECTOR_TILE_OUTPUT</span><span class="s2">&quot;</span> -output <span class="s2">&quot;</span><span class="nv">$OUTPUT_ANNOTATION</span><span class="s2">&quot;</span> -tile_width <span class="s2">&quot;</span><span class="nv">$SQUARED_DIMENSION</span><span class="s2">&quot;</span> -tile_height <span class="s2">&quot;</span><span class="nv">$SQUARED_DIMENSION</span><span class="s2">&quot;</span> -verbose True
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="todo.html" class="btn btn-neutral float-right" title="TODO list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installing.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Rodolfo Lotte
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
