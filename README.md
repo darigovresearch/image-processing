@@ -9,6 +9,8 @@
         <img src="https://img.shields.io/github/forks/Bioverse-Labs/image-processing" /></a>
     <a href="https://github.com/Bioverse-Labs/image-processing/LICENCE.md" alt="Licence">
         <img src="https://img.shields.io/github/license/Bioverse-Labs/image-processing" /></a>
+    <a href='https://bioverse-ip.readthedocs.io/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/bioverse-ip/badge/?version=latest' alt='Documentation Status' /></a>
     <a href="https://twitter.com/BioverseLabs" alt="Twitter">
         <img src="https://img.shields.io/twitter/follow/BioverseLabs?label=Follow&style=social" /></a>
 </p>
