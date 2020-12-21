@@ -1,9 +1,10 @@
 import os
 import gdal
+import osr
 import logging
+import glob
 import shapefile
 import geopandas as gp
-import glob
 import numpy as np
 import settings
 
@@ -236,7 +237,7 @@ class Tiling:
             y_arr.reverse()
         return ext
 
-    def tiling_raster(self, image, output_folder, width, height):
+    def tiling_raster(self, image, output_folder, width, height, strecthing=True):
         """
         Take a image with high dimensions, and tile it in small other pieces with dimension of width x height
 
@@ -244,23 +245,24 @@ class Tiling:
         :param output_folder: the absolute path to the outputs
         :param width: the width of the image
         :param height: the width of the image
+        :param strecthing: default True. If False, the outputs will be save as it is the inputs
         """
-        # TODO: test with endswith is not working
         if os.path.isfile(image) and image.endswith(settings.VALID_RASTER_EXTENSION):
             filename = os.path.basename(image)
             name, file_extension = os.path.splitext(filename)
             ds = gdal.Open(image)
+            datatype = ds.GetRasterBand(1).DataType
+            dtype = gdal.GetDataTypeName(datatype)
 
             if ds is None:
                 logging.warning(">>>>>> Could not open image file {}. Skipped!".format(image))
-
-            stats = [ds.GetRasterBand(i + 1).GetStatistics(True, True) for i in range(ds.RasterCount)]
-            vmin, vmax, vmean, vstd = zip(*stats)
 
             rows = ds.RasterXSize
             cols = ds.RasterYSize
             tiles_cols = cols / width
             tiles_rows = rows / height
+
+            logging.info(">>>> File {} opened! Image with [{}, {}] size and {} type!".format(image, rows, cols, dtype))
             logging.info(">>>> Tiling image {}. {} x {} pixels. Estimated {} tiles of {} x {}..."
                          .format(image, rows, cols, round(tiles_cols * tiles_rows), width, height))
 
@@ -269,9 +271,23 @@ class Tiling:
                 for j in range(0, cols, height):
                     try:
                         output = os.path.join(output_folder, name + "_" + str(i) + "_" + str(j) + file_extension)
-                        gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
-                                       outputType=gdal.GDT_Int16, scaleParams=[[list(zip(*[vmin, vmax]))]],
-                                       options=['-epo', '-eco', '-b', '5', '-b', '3', '-b', '2'])
+
+                        if strecthing is True:
+                            stats = [ds.GetRasterBand(i + 1).GetStatistics(True, True) for i in range(ds.RasterCount)]
+                            vmin, vmax, vmean, vstd = zip(*stats)
+                            gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
+                                           outputType=datatype, scaleParams=[[list(zip(*[vmin, vmax]))]],
+                                           options=['-epo', '-eco',
+                                                    '-b', settings.RASTER_TILES_COMPOSITION[0],
+                                                    '-b', settings.RASTER_TILES_COMPOSITION[1],
+                                                    '-b', settings.RASTER_TILES_COMPOSITION[2]])
+                        else:
+                            gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
+                                           outputType=datatype,
+                                           options=['-epo', '-eco',
+                                                    '-b', settings.RASTER_TILES_COMPOSITION[0],
+                                                    '-b', settings.RASTER_TILES_COMPOSITION[1],
+                                                    '-b', settings.RASTER_TILES_COMPOSITION[2]])
 
                     except RuntimeError:
                         continue
@@ -281,7 +297,6 @@ class Tiling:
     def tiling_vector(self, image_tiles_folder, shp_reference, output_folder):
         """
         Take a vector file and tile it according to the extend's image presented in image_tiles_folder
-
         :param image_tiles_folder: the absolute path to the image file (raster)
         :param shp_reference: the vector file to be tiled, which shares the same region as the
                               images presented in image_tiles_folder
@@ -316,10 +331,10 @@ class Tiling:
                 logging.warning(">>>> {} not a valid extension for a raster!".format(ext))
                 continue
 
+            output = os.path.join(output_folder, name + ".shp")
             complete_path = os.path.join(image_tiles_folder, image)
             tile = gdal.Open(complete_path)
 
-            prj = tile.GetProjection()
             gt = tile.GetGeoTransform()
             cols_tile = tile.RasterXSize
             rows_tile = tile.RasterYSize
@@ -327,41 +342,39 @@ class Tiling:
 
             bounds = Polygon(ext)
             baseshp = gp.read_file(shp_reference)
-
-            # TODO: define shapefile crs from image crs - hardcoded
-            # srs = osr.SpatialReference()
-            # srs.ImportFromWkt(prj)
             baseshp = baseshp.to_crs(epsg=32722)
 
-            ids = []
-            classes = []
-            polygons_intersecting = []
-            for i in range(len(baseshp)):
-                p1 = baseshp['geometry'][i]
-                p2 = bounds
-
-                if p1 is None:
-                    logging.info(">>>>>> Geometry is empty! File {}".format(os.path.basename(shp_reference)))
-                    continue
-
-                if p1.is_valid is False:
-                    p1 = p1.buffer(0)
-
-                if not p1.intersection(p2).is_empty:
-                    ids.append(i)
-                    classes.append(baseshp[settings.CLASS_NAME][i])
-                    polygons_intersecting.append(p1.intersection(p2))
-
-            if len(polygons_intersecting) != 0:
-                gdf = gp.GeoDataFrame()
-                gdf.crs = baseshp.crs
-                gdf['id'] = ids
-                gdf['class'] = classes
-                gdf['geometry'] = polygons_intersecting
-
-                output = os.path.join(output_folder, name + ".shp")
-                gdf.to_file(output, driver='ESRI Shapefile')
+            if os.path.isfile(output):
+                continue
             else:
                 os.remove(complete_path)
-
-
+                # ids = []
+                # classes = []
+                # polygons_intersecting = []
+                # for i in range(len(baseshp)):
+                #     p1 = baseshp['geometry'][i]
+                #     p2 = bounds
+                #
+                #     if p1 is None:
+                #         logging.info(">>>>>> Geometry is empty! File {}".format(os.path.basename(shp_reference)))
+                #         continue
+                #
+                #     if p1.is_valid is False:
+                #         p1 = p1.buffer(0)
+                #
+                #     if not p1.intersection(p2).is_empty:
+                #         ids.append(i)
+                #         classes.append(baseshp[settings.CLASS_NAME][i])
+                #         polygons_intersecting.append(p1.intersection(p2))
+                #
+                # if len(polygons_intersecting) != 0:
+                #     gdf = gp.GeoDataFrame()
+                #     gdf.crs = baseshp.crs
+                #     gdf['id'] = ids
+                #     gdf['class'] = classes
+                #     gdf['geometry'] = polygons_intersecting
+                #     gdf.to_file(output, driver='ESRI Shapefile')
+                # else:
+                #     os.remove(complete_path)
+                #
+                #
