@@ -5,7 +5,7 @@ USER_SENTINEL_HUB = config('USER_SENTINEL_HUB', default='USER_SENTINEL_HUB')
 VALID_RASTER_EXTENSION = (".jpg", ".png", ".tif", ".tiff", ".JPG", ".PNG", ".TIF", ".TIFF")
 VALID_VECTOR_EXTENSION = ".shp"
 
-RASTER_TILES_COMPOSITION = ['8', '3', '2']
+RASTER_TILES_COMPOSITION = ['5', '3', '2']
 CLASS_NAME = 'class'
 CLASSES = {
     'color': {

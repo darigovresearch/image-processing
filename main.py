@@ -36,7 +36,7 @@ def main(arguments):
             if (arguments.image is not None) and (arguments.shapefile_folder is not None) and \
                     (arguments.output is not None) and (arguments.width is not None) and (arguments.height is not None):
                 tiling.Tiling().shp2png(arguments.image, arguments.shapefile_folder, arguments.output,
-                                        arguments.width, arguments.height, settings.CLASSES, 'class_id')
+                                        arguments.width, arguments.height, settings.CLASSES, label_type='rgb')
             else:
                 logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
                               "empty. Try it again!")

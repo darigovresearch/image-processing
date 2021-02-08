@@ -76,7 +76,7 @@ annotation image after processing (with RGB color (102,153,0) for `nut` class):
 ## Running the raster tilling:
 The raster tiling consists in crop the full image in small peaces in order to get a required dimension for most of the supervised classifiers. 
 
-Here, the procedure demands 6 arguments, which are the procedure to be executed (`-procedure`), the full image path (TIFF format - `-image`), the output to the tiles (`-output`), the width dimension of the tiles (`-tile_width`), the height dimension of the tiles (`-tile_height`), and a boolean verbose outcomes (`-verbose`). 
+Here, the procedure demands 6 arguments, which are the procedure to be executed (`-procedure`), the full image path (TIFF format - `-image`), the output to the tiles (`-output`), the width dimension of the tiles (`-tile_width`), the height dimension of the tiles (`-tile_height`), and a boolean verbose outcomes (`-verbose`). Besides, it is really important to configure the composition of the tiles. In `settings.py` look for `RASTER_TILES_COMPOSITION` and define the ordered band that the tiles should be saved. Right after, the procedure is ready to run:
 ```
 python main.py -procedure tiling_raster 
                -image PATH_TO_FULL_IMAGE_IN_TIFF_FORMAT  
@@ -85,7 +85,19 @@ python main.py -procedure tiling_raster
                -tile_height DIMESION_OF_TILES 
                -verbose BOOLEAN
 ```
-**In Linux, it should be run in main folder**
+ Considering `-image` with `/PATH/sample-raster.tif`, `-tile_width` and `-tile_height` set as `256`, and verbose True, then, you should see the following logs:
+```
+[2021-02-07 15:05:04] {tiling.py      :265 } INFO : >>>> File /PATH/sample-raster.tif opened! Image with [1560, 1083] size and Byte type! 
+[2021-02-07 15:05:04] {tiling.py      :266 } INFO : >>>> Tiling image /PATH/sample-raster.tif. 1560 x 1083 pixels. Estimated 26 tiles of 256 x 256... 
+```
+
+The results of tiling the image will end up with the following outcomes: 
+
+<img src="pics/tile-raster.png">
+
+the tiles in between were hidden only for visualization purposes. 
+
+> In Linux, it should be run in main folder
 
 ## Running the vector tilling:
 The vector tiling consists in crop the full shapefile in small peaces according to the raster tiles extends processed before. The procedure saves a tiled shapefile if the full shapefile intersect a raster tile. If it does not intersect, the raster tile is then deleted (in order to save space). 
@@ -98,7 +110,16 @@ python main.py -procedure tiling_vector
                -shapefile_reference PATH_TO_REFERENCE_SHAPEFILES               
                -verbose BOOLEAN
 ```
-**In Linux, it should be run in main folder**
+ Considering `-image_tiles` with the path of the raster tiles previously executed (i.e. `-output`), the respecting reference as `/PATH/as `256`, and verbose True, then, you should see the following logs:
+```
+>> Tiling vector /PATH/sample-raster.shp respecting to the tiles extends
+```
+
+The results of tiling the vector reference will end up with the following outcomes: 
+
+<img src="pics/tile-vector.png">
+
+> In Linux, it should be run in main folder
 
 ## Running the SHP to PNG conversion:
 The vector tiling consists in crop the full shapefile in small peaces according to the raster tiles extends processed before. The procedure saves a tiled shapefile if the full shapefile intersect a raster tile. If it does not intersect, the raster tile is then deleted (in order to save space). 
@@ -112,11 +133,19 @@ python main.py -procedure shp2png
                -tile_height DIMESION_OF_TILES 
                -verbose BOOLEAN
 ```
-**In Linux, it should be run in main folder**
+
+The results of tiling the vector reference will end up with the following outcomes: 
+
+<img src="pics/tile-png.png">
+
+Note that when the polygon do not intersect any raster image, none label images are generated.  
+
+> In Linux, it should be run in main folder
 
 ## Split the training and validation datasets:
-On going...
+The samples as soon as generated, it could to be randomly splitted in order to have validation samples. It is not mandatory to have the samples splitter in training, validation and tests because the training procedure could already have this organization done during the own training. Still, this procedure was implemented as an option to those cases that need the samples already splitted.
 
+As easy as the previous options, the procedure demands 5 arguments, which are the procedure to be executed (`-procedure`), the training path (`-training_folder`), the validation path (), the percentage of training samples that will be placed in validation folder (`-percentage`), and a boolean verbose outcomes (`-verbose`). 
 ```
 python main.py -procedure split_samples
                -training_folder COMPLETE_PATH_TO_TRAINING_FOLDER/
@@ -124,6 +153,7 @@ python main.py -procedure split_samples
                -percentage PERCENT_DESTINATION_FOR_VALIDATION_IMAGES/
                -verbose BOOLEAN
 ```
+As results, the percentage of images is then randomly selected and place in validation folder. 
 
 ## Convert the geographic format, to DL known format:
 On going...
@@ -131,7 +161,7 @@ On going...
 ```
 ./tiff2png.sh PATH_TO_TIFF_FOLDER
 ```
-**In Linux, it should be run in the `scripts` folder**
+> In Linux, it should be run in the `scripts` folder
 
 ## Keras/Pillow format file required:
 Some image formats do not work well over the [Keras framework](https://keras.io/), such as, TIFF format. For that reason, the tiles generated in `tiling_vector` can then be converted in PNG format using `gdal_translate` ([More details](https://gdal.org/programs/gdal_translate.html)), finally get the final version of the Deep Learning input. The shellscript `tiff2png` is an auxiliary file to translate all tiff repository in png format:
@@ -180,9 +210,9 @@ python main.py -procedure shp2png -image "$RASTER_TILE_OUTPUT" -shapefile_folder
 # TODO-list
 This source-code is being released for specific applications, and for those who probably has similar needs. For this reason, we still have a lot to do in terms of unit tests, python conventions, optimization issues, refactoring, so on! So, Feel free to use and any recommendation or PRs will be totally welcome!
 
-- ~~refactor docstring~~``
+- ~~refactor docstring~~
 - open shapefile with predicted encoding - hardcoded
 - apply shapefile crs from image raster - hardcoded
 - unittest over basic methods: filesystem/IO, organization, params
-- improve logging: verbose long paths and lack of logs for some processing
-- ~~unecessary looping in all shapefiles during tiling_vector - optimize~~``
+- ~~improve logging: verbose long paths and lack of logs for some processing~~
+- ~~unecessary looping in all shapefiles during tiling_vector - optimize~~

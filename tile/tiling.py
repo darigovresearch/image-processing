@@ -172,7 +172,7 @@ class Tiling:
             name, file_extension = os.path.splitext(shape)
             shape_path = os.path.join(shapefile_folder, shape)
             output = os.path.join(output_folder, name + ".png")
-            raster = os.path.join(raster_folder, name + ".TIF")
+            raster = os.path.join(raster_folder, name + ".tif")
 
             if os.path.isfile(raster):
                 tile = gdal.Open(raster)
@@ -347,34 +347,33 @@ class Tiling:
             if os.path.isfile(output):
                 continue
             else:
-                os.remove(complete_path)
-                # ids = []
-                # classes = []
-                # polygons_intersecting = []
-                # for i in range(len(baseshp)):
-                #     p1 = baseshp['geometry'][i]
-                #     p2 = bounds
-                #
-                #     if p1 is None:
-                #         logging.info(">>>>>> Geometry is empty! File {}".format(os.path.basename(shp_reference)))
-                #         continue
-                #
-                #     if p1.is_valid is False:
-                #         p1 = p1.buffer(0)
-                #
-                #     if not p1.intersection(p2).is_empty:
-                #         ids.append(i)
-                #         classes.append(baseshp[settings.CLASS_NAME][i])
-                #         polygons_intersecting.append(p1.intersection(p2))
-                #
-                # if len(polygons_intersecting) != 0:
-                #     gdf = gp.GeoDataFrame()
-                #     gdf.crs = baseshp.crs
-                #     gdf['id'] = ids
-                #     gdf['class'] = classes
-                #     gdf['geometry'] = polygons_intersecting
-                #     gdf.to_file(output, driver='ESRI Shapefile')
-                # else:
-                #     os.remove(complete_path)
-                #
-                #
+                ids = []
+                classes = []
+                polygons_intersecting = []
+                for i in range(len(baseshp)):
+                    p1 = baseshp['geometry'][i]
+                    p2 = bounds
+
+                    if p1 is None:
+                        logging.info(">>>>>> Geometry is empty! File {}".format(os.path.basename(shp_reference)))
+                        continue
+
+                    if p1.is_valid is False:
+                        p1 = p1.buffer(0)
+
+                    if not p1.intersection(p2).is_empty:
+                        ids.append(i)
+                        classes.append(baseshp[settings.CLASS_NAME][i])
+                        polygons_intersecting.append(p1.intersection(p2))
+
+                if len(polygons_intersecting) != 0:
+                    gdf = gp.GeoDataFrame()
+                    gdf.crs = baseshp.crs
+                    gdf['id'] = ids
+                    gdf['class'] = classes
+                    gdf['geometry'] = polygons_intersecting
+                    gdf.to_file(output, driver='ESRI Shapefile')
+                else:
+                    os.remove(complete_path)
+
+
