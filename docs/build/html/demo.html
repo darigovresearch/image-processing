@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="TODO list" href="todo.html" />
-    <link rel="prev" title="Installation" href="installing.html" /> 
+    <link rel="prev" title="Documentation" href="documentation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,6 +86,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installing.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Demo and examples</span></p>
 <ul class="current">
@@ -178,7 +179,7 @@
 <div class="section" id="running-the-raster-tilling">
 <h3>Running the raster tilling<a class="headerlink" href="#running-the-raster-tilling" title="Permalink to this headline">¶</a></h3>
 <p>The raster tiling consists in crop the full image in small peaces in order to get a required dimension for most of the supervised classifiers.</p>
-<p>Here, the procedure demands 6 arguments, which are the procedure to be executed (<cite>-procedure</cite>), the full image path (TIFF format - <cite>-image</cite>), the output to the tiles (<cite>-output</cite>), the width dimension of the tiles (<cite>-tile_width</cite>), the height dimension of the tiles (<cite>-tile_height</cite>), and a boolean verbose outcomes (<cite>-verbose</cite>).</p>
+<p>Here, the procedure demands 6 arguments, which are the procedure to be executed (<cite>-procedure</cite>), the full image path (TIFF format - <cite>-image</cite>), the output to the tiles (<cite>-output</cite>), the width dimension of the tiles (<cite>-tile_width</cite>), the height dimension of the tiles (<cite>-tile_height</cite>), and a boolean verbose outcomes (<cite>-verbose</cite>). Besides, it is really important to configure the composition of the tiles. In <cite>settings.py</cite> look for <cite>RASTER_TILES_COMPOSITION</cite> and define the ordered band that the tiles should be saved. Right after, the procedure is ready to run:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">procedure</span> <span class="n">tiling_raster</span>
                <span class="o">-</span><span class="n">image</span> <span class="n">PATH_TO_FULL_IMAGE_IN_TIFF_FORMAT</span>
                <span class="o">-</span><span class="n">output</span> <span class="n">PATH_TO_OUTPUT_RASTER_TILES</span>
@@ -187,7 +188,15 @@
                <span class="o">-</span><span class="n">verbose</span> <span class="n">BOOLEAN</span>
 </pre></div>
 </div>
-<p><strong>In Linux, it should be run in main folder</strong></p>
+<p>Considering <cite>-image</cite> with <cite>/PATH/sample-raster.tif</cite>, <cite>-tile_width</cite> and <cite>-tile_height</cite> set as <cite>256</cite>, and verbose True, then, you should see the following logs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[2021-02-07 15:05:04] {tiling.py      :265 } INFO : &gt;&gt;&gt;&gt; File /PATH/sample-raster.tif opened! Image with [1560, 1083] size and Byte type!
+[2021-02-07 15:05:04] {tiling.py      :266 } INFO : &gt;&gt;&gt;&gt; Tiling image /PATH/sample-raster.tif. 1560 x 1083 pixels. Estimated 26 tiles of 256 x 256...
+</pre></div>
+</div>
+<p>The results of tiling the image will end up with the following outcomes:</p>
+<img alt="_images/tile-raster.png" src="_images/tile-raster.png" />
+<p>the tiles in between were hidden only for visualization purposes.</p>
+<p>&gt; In Linux, it should be run in main folder</p>
 </div>
 <div class="section" id="running-the-vector-tilling">
 <h3>Running the vector tilling<a class="headerlink" href="#running-the-vector-tilling" title="Permalink to this headline">¶</a></h3>
@@ -200,7 +209,13 @@
                <span class="o">-</span><span class="n">verbose</span> <span class="n">BOOLEAN</span>
 </pre></div>
 </div>
-<p><strong>In Linux, it should be run in main folder</strong></p>
+<p>Considering <cite>-image_tiles</cite> with the path of the raster tiles previously executed (i.e. <cite>-output</cite>), the respecting reference as <cite>/PATH/as `256</cite>, and verbose True, then, you should see the following logs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="p">[</span><span class="mi">2021</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">07</span> <span class="mi">15</span><span class="p">:</span><span class="mi">05</span><span class="p">:</span><span class="mi">04</span><span class="p">]</span> <span class="p">{</span><span class="n">tiling</span><span class="o">.</span><span class="n">py</span>      <span class="p">:</span><span class="mi">265</span> <span class="p">}</span> <span class="n">INFO</span> <span class="p">:</span> <span class="n">Tiling</span> <span class="n">vector</span> <span class="o">/</span><span class="n">PATH</span><span class="o">/</span><span class="n">sample</span><span class="o">-</span><span class="n">raster</span><span class="o">.</span><span class="n">shp</span> <span class="n">respecting</span> <span class="n">to</span> <span class="n">the</span> <span class="n">tiles</span> <span class="n">extends</span>
+</pre></div>
+</div>
+<p>The results of tiling the vector reference will end up with the following outcomes:</p>
+<img alt="_images/tile-vector.png" src="_images/tile-vector.png" />
+<p>&gt; In Linux, it should be run in main folder</p>
 </div>
 <div class="section" id="running-the-shp-to-png-conversion">
 <h3>Running the SHP to PNG conversion<a class="headerlink" href="#running-the-shp-to-png-conversion" title="Permalink to this headline">¶</a></h3>
@@ -214,11 +229,15 @@
                <span class="o">-</span><span class="n">verbose</span> <span class="n">BOOLEAN</span>
 </pre></div>
 </div>
-<p><strong>In Linux, it should be run in main folder</strong></p>
+<p>The results of tiling the vector reference will end up with the following outcomes:</p>
+<img alt="_images/tile-png.png" src="_images/tile-png.png" />
+<p>Note that when the polygon do not intersect any raster image, none label images are generated.</p>
+<p>&gt; In Linux, it should be run in main folder</p>
 </div>
 <div class="section" id="split-the-training-and-validation-datasets">
 <h3>Split the training and validation datasets<a class="headerlink" href="#split-the-training-and-validation-datasets" title="Permalink to this headline">¶</a></h3>
-<p>On going…</p>
+<p>The samples as soon as generated, it could to be randomly splitted in order to have validation samples. It is not mandatory to have the samples splitter in training, validation and tests because the training procedure could already have this organization done during the own training. Still, this procedure was implemented as an option to those cases that need the samples already splitted.</p>
+<p>As easy as the previous options, the procedure demands 5 arguments, which are the procedure to be executed (<cite>-procedure</cite>), the training path (<cite>-training_folder</cite>), the validation path (), the percentage of training samples that will be placed in validation folder (<cite>-percentage</cite>), and a boolean verbose outcomes (<cite>-verbose</cite>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">procedure</span> <span class="n">split_samples</span>
                <span class="o">-</span><span class="n">training_folder</span> <span class="n">COMPLETE_PATH_TO_TRAINING_FOLDER</span><span class="o">/</span>
                <span class="o">-</span><span class="n">validation_folder</span> <span class="n">COMPLETE_PATH_TO_VALIDATION_FOLDER</span><span class="o">/</span>
@@ -226,14 +245,15 @@
                <span class="o">-</span><span class="n">verbose</span> <span class="n">BOOLEAN</span>
 </pre></div>
 </div>
+<p>As results, the percentage of images is then randomly selected and place in validation folder.</p>
 </div>
 <div class="section" id="convert-the-geographic-format-to-dl-known-format">
 <h3>Convert the geographic format, to DL known format<a class="headerlink" href="#convert-the-geographic-format-to-dl-known-format" title="Permalink to this headline">¶</a></h3>
-<p>On going…</p>
+<p>Some useful and independent bash scripts were also provided in order to assist the deep learning dataset preparation. Depending the architecture or library used for training or inferences, the PNG format is mandatory. Thus, the  <cite>tiff2png.sh</cite> script will convert a complete folder with TIFF files in PNG format.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tiff2png.sh PATH_TO_TIFF_FOLDER
 </pre></div>
 </div>
-<p><strong>In Linux, it should be run in the `scripts` folder</strong></p>
+<p>&gt; In Linux, it should be run in the <cite>scripts</cite> folder</p>
 </div>
 <div class="section" id="keras-pillow-format-file-required">
 <h3>Keras/Pillow format file required<a class="headerlink" href="#keras-pillow-format-file-required" title="Permalink to this headline">¶</a></h3>
@@ -295,7 +315,7 @@ python main.py -procedure shp2png -image <span class="s2">&quot;</span><span cla
         <a href="todo.html" class="btn btn-neutral float-right" title="TODO list" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installing.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="documentation.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

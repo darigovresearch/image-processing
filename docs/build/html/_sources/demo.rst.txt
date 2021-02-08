@@ -9,7 +9,7 @@ Running the raster tilling
 ---------------------------
 The raster tiling consists in crop the full image in small peaces in order to get a required dimension for most of the supervised classifiers.
 
-Here, the procedure demands 6 arguments, which are the procedure to be executed (`-procedure`), the full image path (TIFF format - `-image`), the output to the tiles (`-output`), the width dimension of the tiles (`-tile_width`), the height dimension of the tiles (`-tile_height`), and a boolean verbose outcomes (`-verbose`).
+Here, the procedure demands 6 arguments, which are the procedure to be executed (`-procedure`), the full image path (TIFF format - `-image`), the output to the tiles (`-output`), the width dimension of the tiles (`-tile_width`), the height dimension of the tiles (`-tile_height`), and a boolean verbose outcomes (`-verbose`). Besides, it is really important to configure the composition of the tiles. In `settings.py` look for `RASTER_TILES_COMPOSITION` and define the ordered band that the tiles should be saved. Right after, the procedure is ready to run:
 
 .. code-block:: python
 
@@ -20,7 +20,20 @@ Here, the procedure demands 6 arguments, which are the procedure to be executed 
                    -tile_height DIMESION_OF_TILES
                    -verbose BOOLEAN
 
-**In Linux, it should be run in main folder**
+Considering `-image` with `/PATH/sample-raster.tif`, `-tile_width` and `-tile_height` set as `256`, and verbose True, then, you should see the following logs:
+
+.. code-block::
+
+    [2021-02-07 15:05:04] {tiling.py      :265 } INFO : >>>> File /PATH/sample-raster.tif opened! Image with [1560, 1083] size and Byte type!
+    [2021-02-07 15:05:04] {tiling.py      :266 } INFO : >>>> Tiling image /PATH/sample-raster.tif. 1560 x 1083 pixels. Estimated 26 tiles of 256 x 256...
+
+The results of tiling the image will end up with the following outcomes:
+
+.. image:: _static/tile-raster.png
+
+the tiles in between were hidden only for visualization purposes.
+
+> In Linux, it should be run in main folder
 
 Running the vector tilling
 ---------------------------
@@ -37,7 +50,17 @@ Here, the procedure demands 6 arguments, which are the procedure to be executed 
                    -shapefile_reference PATH_TO_REFERENCE_SHAPEFILES
                    -verbose BOOLEAN
 
-**In Linux, it should be run in main folder**
+Considering `-image_tiles` with the path of the raster tiles previously executed (i.e. `-output`), the respecting reference as `/PATH/as `256`, and verbose True, then, you should see the following logs:
+
+.. code-block::
+
+    >> [2021-02-07 15:05:04] {tiling.py      :265 } INFO : Tiling vector /PATH/sample-raster.shp respecting to the tiles extends
+
+The results of tiling the vector reference will end up with the following outcomes:
+
+.. image:: _static/tile-vector.png
+
+> In Linux, it should be run in main folder
 
 Running the SHP to PNG conversion
 ---------------------------------
@@ -55,11 +78,19 @@ Here, the procedure demands 6 arguments, which are the procedure to be executed 
                    -tile_height DIMESION_OF_TILES
                    -verbose BOOLEAN
 
-**In Linux, it should be run in main folder**
+The results of tiling the vector reference will end up with the following outcomes:
+
+.. image:: _static/tile-png.png
+
+Note that when the polygon do not intersect any raster image, none label images are generated.
+
+> In Linux, it should be run in main folder
 
 Split the training and validation datasets
 ------------------------------------------
-On going...
+The samples as soon as generated, it could to be randomly splitted in order to have validation samples. It is not mandatory to have the samples splitter in training, validation and tests because the training procedure could already have this organization done during the own training. Still, this procedure was implemented as an option to those cases that need the samples already splitted.
+
+As easy as the previous options, the procedure demands 5 arguments, which are the procedure to be executed (`-procedure`), the training path (`-training_folder`), the validation path (), the percentage of training samples that will be placed in validation folder (`-percentage`), and a boolean verbose outcomes (`-verbose`).
 
 .. code-block:: python
 
@@ -69,15 +100,17 @@ On going...
                    -percentage PERCENT_DESTINATION_FOR_VALIDATION_IMAGES/
                    -verbose BOOLEAN
 
+As results, the percentage of images is then randomly selected and place in validation folder.
+
 Convert the geographic format, to DL known format
 -------------------------------------------------
-On going...
+Some useful and independent bash scripts were also provided in order to assist the deep learning dataset preparation. Depending the architecture or library used for training or inferences, the PNG format is mandatory. Thus, the  `tiff2png.sh` script will convert a complete folder with TIFF files in PNG format.
 
 .. code-block:: bash
 
     ./tiff2png.sh PATH_TO_TIFF_FOLDER
 
-**In Linux, it should be run in the `scripts` folder**
+> In Linux, it should be run in the `scripts` folder
 
 Keras/Pillow format file required
 ---------------------------------

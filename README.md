@@ -112,7 +112,7 @@ python main.py -procedure tiling_vector
 ```
  Considering `-image_tiles` with the path of the raster tiles previously executed (i.e. `-output`), the respecting reference as `/PATH/as `256`, and verbose True, then, you should see the following logs:
 ```
->> Tiling vector /PATH/sample-raster.shp respecting to the tiles extends
+>> [2021-02-07 15:05:04] {tiling.py      :265 } INFO : Tiling vector /PATH/sample-raster.shp respecting to the tiles extends
 ```
 
 The results of tiling the vector reference will end up with the following outcomes: 

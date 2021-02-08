@@ -333,7 +333,7 @@ of interest objects</p></li>
 
 <dl class="py method">
 <dt id="tile.tiling.Tiling.tiling_raster">
-<code class="sig-name descname">tiling_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">output_folder</span></em>, <em class="sig-param"><span class="n">width</span></em>, <em class="sig-param"><span class="n">height</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tile.tiling.Tiling.tiling_raster" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tiling_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">output_folder</span></em>, <em class="sig-param"><span class="n">width</span></em>, <em class="sig-param"><span class="n">height</span></em>, <em class="sig-param"><span class="n">strecthing</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tile.tiling.Tiling.tiling_raster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take a image with high dimensions, and tile it in small other pieces with dimension of width x height</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -342,6 +342,7 @@ of interest objects</p></li>
 <li><p><strong>output_folder</strong> – the absolute path to the outputs</p></li>
 <li><p><strong>width</strong> – the width of the image</p></li>
 <li><p><strong>height</strong> – the width of the image</p></li>
+<li><p><strong>strecthing</strong> – default True. If False, the outputs will be save as it is the inputs</p></li>
 </ul>
 </dd>
 </dl>
@@ -350,15 +351,15 @@ of interest objects</p></li>
 <dl class="py method">
 <dt id="tile.tiling.Tiling.tiling_vector">
 <code class="sig-name descname">tiling_vector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_tiles_folder</span></em>, <em class="sig-param"><span class="n">shp_reference</span></em>, <em class="sig-param"><span class="n">output_folder</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tile.tiling.Tiling.tiling_vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Take a vector file and tile it according to the extend’s image presented in image_tiles_folder</p>
+<dd><p>Take a vector file and tile it according to the extend’s image presented in image_tiles_folder
+:param image_tiles_folder: the absolute path to the image file (raster)
+:param shp_reference: the vector file to be tiled, which shares the same region as the</p>
+<blockquote>
+<div><p>images presented in image_tiles_folder</p>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>image_tiles_folder</strong> – the absolute path to the image file (raster)</p></li>
-<li><p><strong>shp_reference</strong> – the vector file to be tiled, which shares the same region as the
-images presented in image_tiles_folder</p></li>
-<li><p><strong>output_folder</strong> – the absolute path to the outputs</p></li>
-</ul>
+<dd class="field-odd"><p><strong>output_folder</strong> – the absolute path to the outputs</p>
 </dd>
 </dl>
 </dd></dl>
