@@ -156,11 +156,11 @@ python main.py -procedure split_samples
 As results, the percentage of images is then randomly selected and place in validation folder. 
 
 ## Convert the geographic format, to DL known format:
-On going...
-
+Some useful and independent bash scripts were also provided in order to assist the deep learning dataset preparation. Depending the architecture or library used for training or inferences, the PNG format is mandatory. Thus, the  `tiff2png.sh` script will convert a complete folder with TIFF files in PNG format.
 ```
 ./tiff2png.sh PATH_TO_TIFF_FOLDER
 ```
+
 > In Linux, it should be run in the `scripts` folder
 
 ## Keras/Pillow format file required:
