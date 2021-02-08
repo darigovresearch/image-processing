@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; image-processing 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Documentation" href="documentation.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/bioverse-white.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Project documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-of-project-environment">Configuration of Project Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-python-and-virtual-environment-linux-distribution">Setting Python and virtual environment (Linux distribution)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-requirements-txt">Installing <cite>requirements.txt</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-settings-py-file">The <cite>settings.py</cite> file</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Demo and examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Demo and Examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">TODO list</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO list</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">image-processing</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installing.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="configuration-of-project-environment">
+<h2>Configuration of Project Environment<a class="headerlink" href="#configuration-of-project-environment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setting-python-and-virtual-environment-linux-distribution">
+<h3>Setting Python and virtual environment (Linux distribution)<a class="headerlink" href="#setting-python-and-virtual-environment-linux-distribution" title="Permalink to this headline">¶</a></h3>
+<p>First of all, check if you have installed the libraries needed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python3-env
+</pre></div>
+</div>
+<p>then, in the</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m venv .venv
+</pre></div>
+</div>
+<p>and activates it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> .venv/bin/activate
+</pre></div>
+</div>
+<p>as soon you have it done, you are ready to install the requirements.</p>
+</div>
+<div class="section" id="installing-requirements-txt">
+<h3>Installing <cite>requirements.txt</cite><a class="headerlink" href="#installing-requirements-txt" title="Permalink to this headline">¶</a></h3>
+<p>If everything is correct, and you <strong>virtualenv</strong> is activated, execute:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -r requirements.txt
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-settings-py-file">
+<h3>The <cite>settings.py</cite> file<a class="headerlink" href="#the-settings-py-file" title="Permalink to this headline">¶</a></h3>
+<p>This file centralized all constants variable used in the code. Until now, only the constants below were required. The shapefiles usually has with it a attribute table, where the geographic geometry and metadata are stored:</p>
+<img alt="_images/attribute-table.png" src="_images/attribute-table.png" />
+<p>This shapefile should have at least one column for the class name. The class name to be read is indicated by <cite>CLASS_NAME</cite> variable. This shapefile could also have multiple classes, for each one, a color should be specified. The values specified in <cite>CLASSES</cite> gives either the exact name of the class as its respective RGB color.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">VALID_RASTER_EXTENSION</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.tif&quot;</span><span class="p">,</span> <span class="s2">&quot;.tiff&quot;</span><span class="p">,</span> <span class="s2">&quot;.TIF&quot;</span><span class="p">,</span> <span class="s2">&quot;.TIFF&quot;</span><span class="p">)</span>
+<span class="n">VALID_VECTOR_EXTENSION</span> <span class="o">=</span> <span class="s2">&quot;.shp&quot;</span>
+
+<span class="n">CLASS_NAME</span> <span class="o">=</span> <span class="s1">&#39;class&#39;</span> <span class="c1"># &lt;---- column name in attribut table</span>
+<span class="n">CLASSES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;nut&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">102</span><span class="p">,</span> <span class="mi">153</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;palm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">153</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">153</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>annotation image after processing (with RGB color (102,153,0) for <cite>nut</cite> class):</p>
+<img alt="_images/annotation.png" src="_images/annotation.png" />
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="documentation.html" class="btn btn-neutral float-right" title="Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Rodolfo Lotte
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
