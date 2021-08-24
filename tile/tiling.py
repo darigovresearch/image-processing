@@ -275,12 +275,15 @@ class Tiling:
                         if strecthing is True:
                             stats = [ds.GetRasterBand(i + 1).GetStatistics(True, True) for i in range(ds.RasterCount)]
                             vmin, vmax, vmean, vstd = zip(*stats)
+                            # gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
+                            #                outputType=datatype, scaleParams=[[list(zip(*[vmin, vmax]))]],
+                            #                options=['-epo', '-eco',
+                            #                         '-b', settings.RASTER_TILES_COMPOSITION[0],
+                            #                         '-b', settings.RASTER_TILES_COMPOSITION[1],
+                            #                         '-b', settings.RASTER_TILES_COMPOSITION[2]])
                             gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
                                            outputType=datatype, scaleParams=[[list(zip(*[vmin, vmax]))]],
-                                           options=['-epo', '-eco',
-                                                    '-b', settings.RASTER_TILES_COMPOSITION[0],
-                                                    '-b', settings.RASTER_TILES_COMPOSITION[1],
-                                                    '-b', settings.RASTER_TILES_COMPOSITION[2]])
+                                           options=['-epo', '-eco'])
                         else:
                             gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
                                            outputType=datatype,
