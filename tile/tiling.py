@@ -172,8 +172,9 @@ class Tiling:
             name, file_extension = os.path.splitext(shape)
             shape_path = os.path.join(shapefile_folder, shape)
             output = os.path.join(output_folder, name + ".png")
-            raster = os.path.join(raster_folder, name + ".tif")
+            raster = os.path.join(raster_folder, name + ".TIF")
 
+            # TODO: the raster extension could vary from TIF to TIFF, tif, tiff, so on.
             if os.path.isfile(raster):
                 tile = gdal.Open(raster)
                 gt = tile.GetGeoTransform()
@@ -272,25 +273,24 @@ class Tiling:
                     try:
                         output = os.path.join(output_folder, name + "_" + str(i) + "_" + str(j) + file_extension)
 
+                        if settings.ALL_BANDS is True:
+                            options = ['-epo', '-eco']
+                        else:
+                            options = ['-epo', '-eco',
+                                       '-b', settings.RASTER_TILES_COMPOSITION[0],
+                                       '-b', settings.RASTER_TILES_COMPOSITION[1],
+                                       '-b', settings.RASTER_TILES_COMPOSITION[2]]
+
                         if strecthing is True:
                             stats = [ds.GetRasterBand(i + 1).GetStatistics(True, True) for i in range(ds.RasterCount)]
                             vmin, vmax, vmean, vstd = zip(*stats)
-                            # gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
-                            #                outputType=datatype, scaleParams=[[list(zip(*[vmin, vmax]))]],
-                            #                options=['-epo', '-eco',
-                            #                         '-b', settings.RASTER_TILES_COMPOSITION[0],
-                            #                         '-b', settings.RASTER_TILES_COMPOSITION[1],
-                            #                         '-b', settings.RASTER_TILES_COMPOSITION[2]])
-                            gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
-                                           outputType=datatype, scaleParams=[[list(zip(*[vmin, vmax]))]],
-                                           options=['-epo', '-eco'])
+                            scale_params = [[list(zip(*[vmin, vmax]))]]
                         else:
-                            gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
-                                           outputType=datatype,
-                                           options=['-epo', '-eco',
-                                                    '-b', settings.RASTER_TILES_COMPOSITION[0],
-                                                    '-b', settings.RASTER_TILES_COMPOSITION[1],
-                                                    '-b', settings.RASTER_TILES_COMPOSITION[2]])
+                            scale_params = None
+
+                        gdal.Translate(output, ds, format='GTIFF', srcWin=[i, j, width, height],
+                                       outputType=datatype, scaleParams=scale_params,
+                                       options=options)
 
                     except RuntimeError:
                         continue

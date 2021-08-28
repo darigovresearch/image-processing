@@ -1,3 +1,4 @@
+import os
 import sys
 import logging
 import argparse
@@ -6,6 +7,8 @@ import settings
 from coloredlogs import ColoredFormatter
 from tile import tiling
 from utils import utils
+
+os.environ['GDAL_PAM_ENABLED'] = 'NO'
 
 
 def main(arguments):
@@ -36,7 +39,7 @@ def main(arguments):
             if (arguments.image is not None) and (arguments.shapefile_folder is not None) and \
                     (arguments.output is not None) and (arguments.width is not None) and (arguments.height is not None):
                 tiling.Tiling().shp2png(arguments.image, arguments.shapefile_folder, arguments.output,
-                                        arguments.width, arguments.height, settings.CLASSES, label_type='rgb')
+                                        arguments.width, arguments.height, settings.CLASSES, label_type='class_id')
             else:
                 logging.error(">> One of arguments (image_folder, shapefile_reference, output_folder) are incorrect or "
                               "empty. Try it again!")
