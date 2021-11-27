@@ -172,7 +172,7 @@ class Tiling:
             name, file_extension = os.path.splitext(shape)
             shape_path = os.path.join(shapefile_folder, shape)
             output = os.path.join(output_folder, name + ".png")
-            raster = os.path.join(raster_folder, name + ".TIF")
+            raster = os.path.join(raster_folder, name + ".tif")
 
             # TODO: the raster extension could vary from TIF to TIFF, tif, tiff, so on.
             if os.path.isfile(raster):
@@ -264,7 +264,7 @@ class Tiling:
             tiles_rows = rows / height
 
             logging.info(">>>> File {} opened! Image with [{}, {}] size and {} type!".format(image, rows, cols, dtype))
-            logging.info(">>>> Tiling image {}. {} x {} pixels. Estimated {} tiles of {} x {}..."
+            logging.info(">> Tiling image {}. {} x {} pixels. Estimated {} tiles of {} x {}..."
                          .format(image, rows, cols, round(tiles_cols * tiles_rows), width, height))
 
             gdal.UseExceptions()
@@ -295,7 +295,8 @@ class Tiling:
                     except RuntimeError:
                         continue
         else:
-            logging.info(">>>> Image file {} does not exist or is a invalid extension!".format(image))
+            logging.info(">>>> Image file {} does not exist or it is an invalid extension!".format(image))
+        logging.info(">>>> Done")
 
     def tiling_vector(self, image_tiles_folder, shp_reference, output_folder):
         """
@@ -345,7 +346,7 @@ class Tiling:
 
             bounds = Polygon(ext)
             baseshp = gp.read_file(shp_reference)
-            baseshp = baseshp.to_crs(epsg=32722)
+            # baseshp = baseshp.to_crs(epsg=32722)
 
             if os.path.isfile(output):
                 continue
@@ -376,7 +377,12 @@ class Tiling:
                     gdf['class'] = classes
                     gdf['geometry'] = polygons_intersecting
                     gdf.to_file(output, driver='ESRI Shapefile')
+                    logging.info(">>>> Raster {} intersect {}. Vector tile {} created!".
+                                 format(complete_path, os.path.basename(shp_reference), output))
                 else:
+                    logging.warning(">>>> Raster {} does not intersect {}. Discarted!".
+                                    format(complete_path, os.path.basename(shp_reference)))
                     os.remove(complete_path)
+        logging.info(">>>> Done")
 
 
