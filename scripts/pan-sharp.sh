@@ -18,6 +18,9 @@
 #                 013505213010_01_003/013505213010_01/013505213010_01_P001_MUL/
 #                 013505213010_01_003/013505213010_01/013505213010_01_P001_PAN/
 #                 /media/rodolfo/data/bioverse/images/kayapo/pan-sharpening/wv2/pan-sharp-campaign-1/
+# Suriname:
+# ./pan-sharp /media/rodolfo/data/bioverse/trees/regions/suriname/images/original/050102209010_01/050102209010_01_P001_MUL/ /media/rodolfo/data/bioverse/trees/regions/suriname/images/original/050102209010_01/050102209010_01_P001_PAN/ /media/rodolfo/data/bioverse/trees/regions/suriname/images/pansharp
+#
 #!/bin/bash
 
 PATH_TO_WV3_IMAGES=$1
@@ -25,18 +28,17 @@ SUBPATH_TO_MULT_IMAGES=$2
 SUBPATH_TO_PAN_IMAGES=$3
 PATH_TO_OUTPUT=$4
 
-BASE=$PATH_TO_WV3_IMAGES
-PATH_MULT=$SUBPATH_TO_MULT_IMAGES
-PATH_PAN=$SUBPATH_TO_PAN_IMAGES
-PATH_RESULT=$PATH_TO_OUTPUT
-
+FILENAME_PATTERNS='s/M2AS/P2AS/i'
 WV2_W='-w 0.095 -w 0.7 -w 0.35 -w 1.0 -w 1.0 -w 1.0 -w 1.0 -w 1.0'
 WV3_W='-w 0.005 -w 0.142 -w 0.209 -w 0.144 -w 0.234 -w 0.234 -w 0.157 -w 0.116'
 
-for mult_image in $BASE$PATH_MULT/*.TIF; do
+for mult_image in $SUBPATH_TO_MULT_IMAGES/*.TIF; do
     filename=$(basename $mult_image)
-    pan_filename=$(echo "$filename" | sed -e 's/M3DS/P3DS/i')
-    pan_image=$BASE$PATH_PAN/$pan_filename
-    result_image=$PATH_RESULT/$filename
-    gdal_pansharpen.py -nodata 0 $WV2_W $pan_image $mult_image $result_image
+    pan_filename=$(echo "$filename" | sed -e $FILENAME_PATTERNS)
+    pan_image=$SUBPATH_TO_PAN_IMAGES/$pan_filename
+    result_image=$PATH_TO_OUTPUT$filename
+
+    echo $filename
+    echo $pan_filename
+    gdal_pansharpen.py -nodata 0 $WV3_W $pan_image $mult_image $result_image
 done
