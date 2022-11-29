@@ -27,6 +27,7 @@ PATH_TO_WV3_IMAGES=$1
 SUBPATH_TO_MULT_IMAGES=$2
 SUBPATH_TO_PAN_IMAGES=$3
 PATH_TO_OUTPUT=$4
+PATH_TO_OUTPUT_REPROJECT=$5
 
 FILENAME_PATTERNS='s/M2AS/P2AS/i'
 WV2_W='-w 0.095 -w 0.7 -w 0.35 -w 1.0 -w 1.0 -w 1.0 -w 1.0 -w 1.0'
@@ -38,7 +39,13 @@ for mult_image in $SUBPATH_TO_MULT_IMAGES/*.TIF; do
     pan_image=$SUBPATH_TO_PAN_IMAGES/$pan_filename
     result_image=$PATH_TO_OUTPUT$filename
 
-    echo $filename
-    echo $pan_filename
     gdal_pansharpen.py -nodata 0 $WV3_W $pan_image $mult_image $result_image
 done
+
+#for pansharped in $PATH_TO_OUTPUT/*.TIF; do
+#  filename=$(basename pansharped)
+#  result_image_reproject=$PATH_TO_OUTPUT_REPROJECT$filename
+#  result_image=$PATH_TO_OUTPUT$filename
+#
+#  gdalwarp.py -t_srs EPSG:4326 $result_image $result_image_reproject
+#done
