@@ -1,7 +1,9 @@
 import os
 import logging
 import shutil
+import glob
 import settings
+import geopandas as gpd
 
 from random import shuffle
 
@@ -16,6 +18,43 @@ class Utils:
         Constructor method
         """
         pass
+
+    def polygon2centroid(self, shp_path, output_centroid_path, output_path_geojson):
+        """
+        Source: https://gis.stackexchange.com/questions/216788/convert-polygon-feature-centroid-to-points-using-python
+        """
+        path = os.path.join(shp_path, "*.shp")
+        shp_files = glob.glob(path)
+
+        logging.info(">>>> Converting {} shapefiles in centroids geojson...".format(len(shp_files)))
+        for item in shp_files:
+            filename = os.path.basename(item)
+            centroid_output = os.path.join(output_centroid_path, filename)
+
+            logging.info(">>>>>> Getting centroids from {}. Saved in {}...".format(item, output_path_geojson))
+            poly = gpd.read_file(item)
+            points = poly.copy()
+            points.geometry = points['geometry'].centroid
+
+            if len(points.geometry) == 0:
+                logging.info(">>>>>> {} there is no polygons!".format(item))
+                continue
+
+            points.crs = poly.crs
+            points.to_file(centroid_output)
+
+            logging.info(">>>>>> Converting {} to geojson {}...".format(item, output_path_geojson))
+            self.shp2geojson(centroid_output, output_path_geojson)
+
+    def shp2geojson(self, shp_path, output_centroid_path):
+        """
+        """
+        filename = os.path.basename(shp_path)
+        name = filename.split(".")[0]
+        geojson_output = os.path.join(output_centroid_path, name + ".geojson")
+
+        shp_file = gpd.read_file(shp_path)
+        shp_file.to_file(geojson_output, driver='GeoJSON')
 
     def check_annotation_extention(self, filepath):
         """
