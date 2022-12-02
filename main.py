@@ -45,6 +45,16 @@ def main(arguments):
                               "empty. Try it again!")
                 raise RuntimeError
 
+        elif arguments.procedure == 'polygon2centroid':
+            if (arguments.shapefile_folder is not None) and (arguments.output_centroid_folder is not None) \
+                    and (arguments.output_geojson_folder is not None):
+                utils.Utils().polygon2centroid(arguments.shapefile_folder, arguments.output_centroid_folder,
+                                               arguments.output_geojson_folder)
+            else:
+                logging.error(">> One of arguments (shapefile_reference, output_centroid_folder) are incorrect or "
+                              "empty. Try it again!")
+                raise RuntimeError
+
         elif arguments.procedure == 'split_samples':
             if (arguments.training_folder is not None) and (arguments.validation_folder is not None) and \
                     (arguments.percentage is not None):
@@ -83,6 +93,11 @@ if __name__ == '__main__':
                        -output PATH_TO_OUTPUT_PNG_TILES/
                        -tile_width INT -tile_height INT 
                        -verbose BOOLEAN
+        > python main.py -procedure polygon2centroid                       
+                       -shapefile_folder PATH_TO_VECTOR_TILES/
+                       -output_centroid_folder PATH_TO_OUTPUT_CENTROID_FOLDER/
+                       -output_geojson_folder PATH_TO_OUTPUT_GEOJSON_FOLDER/
+                       -verbose BOOLEAN
         > python main.py -procedure split_samples
                        -training_folder COMPLETE_PATH_TO_TRAINING_FOLDER/
                        -validation_folder COMPLETE_PATH_TO_VALIDATION_FOLDER/                       
@@ -102,23 +117,21 @@ if __name__ == '__main__':
     parser.add_argument('-shapefile_reference', action="store", dest='shapefile_reference',
                         help='ESRI Shapefile to be used as reference to generate the respective annotation for image '
                              'tiles. The image_folder argument, in this case, has to be the image tiles folder')
-    parser.add_argument('-shapefile_folder', action="store", dest='shapefile_folder', help='Shapefile tiles folder: '
-                                                                                           'the complete path to '
-                                                                                           'the vector tiles')
+    parser.add_argument('-shapefile_folder', action="store", dest='shapefile_folder',
+                        help='Shapefile tiles folder: the complete path to the vector tiles')
+    parser.add_argument('-output_centroid_folder', action="store", dest='output_centroid_folder',
+                        help='Output path to centroids folder')
+    parser.add_argument('-output_geojson_folder', action="store", dest='output_geojson_folder',
+                        help='Output path to geojson folder')
     parser.add_argument('-tile_width', action="store", dest='width', type=int, help='Integer tile width')
     parser.add_argument('-tile_height', action="store", dest='height', type=int, help='Integer tile height')
-    parser.add_argument('-training_folder', action="store", dest='training_folder', help='The training folder with '
-                                                                                         'image/ and label/ datasets')
-    parser.add_argument('-validation_folder', action="store", dest='validation_folder', help='The validation folder '
-                                                                                             'with image/ and label/ '
-                                                                                             'folders. The '
-                                                                                             'split_samples procedure '
-                                                                                             'will cut a percentage of '
-                                                                                             'training imagens and will'
-                                                                                             ' place it here')
-    parser.add_argument('-percentage', action="store", dest='percentage', help='Integer [0-100] denoting the amount of '
-                                                                               'training samples to be used for '
-                                                                               'validation')
+    parser.add_argument('-training_folder', action="store", dest='training_folder',
+                        help='The training folder with image/ and label/ datasets')
+    parser.add_argument('-validation_folder', action="store", dest='validation_folder',
+                        help='The validation folder with image/ and label/ folders. The split_samples procedure '
+                             'will cut a percentage of training imagens and will place it here')
+    parser.add_argument('-percentage', action="store", dest='percentage',
+                        help='Integer [0-100] denoting the amount of training samples to be used for validation')
     parser.add_argument('-verbose', action="store", dest='verbose', help='Boolean (True or False) '
                                                                          'for printing log or not')
 
