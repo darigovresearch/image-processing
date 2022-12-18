@@ -219,4 +219,4 @@ This source-code is being released for specific applications, and for those who 
 
 
 # License
-The contents of this repository is under an [MIT](https://github.com/Bioverse-Labs/image-processing/blob/master/LICENSE)
+The contents of this repository is under an [MIT License](https://github.com/Bioverse-Labs/image-processing/blob/master/LICENSE).
