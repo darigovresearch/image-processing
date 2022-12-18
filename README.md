@@ -216,3 +216,7 @@ This source-code is being released for specific applications, and for those who 
 - unittest over basic methods: filesystem/IO, organization, params
 - ~~improve logging: verbose long paths and lack of logs for some processing~~
 - ~~unecessary looping in all shapefiles during tiling_vector - optimize~~
+
+
+# License
+The contents of this repository is under an [MIT](https://github.com/Bioverse-Labs/image-processing/blob/master/LICENSE)
